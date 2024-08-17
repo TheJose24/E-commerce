@@ -95,9 +95,12 @@ Sigue estos pasos para instalar y ejecutar el proyecto en tu máquina local:
 https://github.com/TheJose24/E-commerce-Slam-Racing/assets/129393100/45be4419-3497-464a-99dc-8773fbb037b6
 
 
-## Agradecimientos
+## **Agradecimientos**
 
 - [Slam Racing](https://www.slamracing.pe)
+
+## **Contribuciones**
+Asegúrate de seguir el flujo de trabajo descrito en el archivo [CONTRIBUTING.md](https://github.com/TheJose24/E-commerce/CONTRIBUTING.md) y realizar pull requests a la rama develop.
 
 
 ## **Licencia**
