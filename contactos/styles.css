@@ -1,0 +1,100 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Asegura que el footer esté al final de la página */
+}
+
+header {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #000; /* Fondo negro */
+    color: white;
+}
+
+#logo {
+    width: 200px; /* Ajusta el tamaño del logo según sea necesario */
+    height: auto; /* Mantiene la proporción del logo */
+    margin-right: 20px; /* Espaciado entre el logo y la navegación */
+}
+
+nav {
+    display: flex;
+    gap: 15px;
+    margin-left: auto; /* Mueve la navegación a la derecha */
+    justify-content: flex-end; /* Alinea los enlaces a la derecha */
+    flex: 1; /* Permite que la navegación use el espacio disponible */
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.contact-container {
+    display: flex;
+    flex-direction: row;
+    flex: 1; /* Permite que esta sección use el espacio disponible */
+}
+
+.image-section {
+    background-color: #000; /* Fondo negro */
+    flex: 1; /* Toma el 50% del ancho */
+    display: flex;
+    align-items: center; /* Centra la imagen verticalmente */
+    justify-content: center; /* Centra la imagen horizontalmente */
+}
+
+.image-section img {
+    max-width: 100%; /* Asegura que la imagen no se desborde */
+    height: auto; /* Mantiene la proporción de la imagen */
+}
+
+.info-section {
+    background-color: #fff; /* Fondo blanco */
+    flex: 1; /* Toma el 50% del ancho */
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px; /* Espaciado entre los grupos de formulario */
+}
+
+label {
+    display: block; /* Alinea las etiquetas en bloque */
+    margin-bottom: 5px; /* Espaciado debajo de las etiquetas */
+}
+
+input, textarea {
+    width: 100%; /* Ocupa el 100% del ancho disponible */
+    padding: 10px; /* Espaciado interno */
+    border: 1px solid #ccc; /* Borde gris claro */
+    border-radius: 4px; /* Bordes redondeados */
+}
+
+button {
+    padding: 10px 15px; /* Espaciado interno del botón */
+    background-color: #000; /* Fondo negro */
+    color: white; /* Texto blanco */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+}
+
+button:hover {
+    background-color: #555; /* Cambia el fondo al pasar el cursor */
+}
+
+footer {
+    text-align: center;
+    padding: 20px; /* Aumentar el padding para mayor separación */
+    background-color: #000; /* Fondo negro */
+    color: white;
+}
