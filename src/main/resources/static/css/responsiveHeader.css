@@ -1,0 +1,20 @@
+@media (max-width: 575px) {
+    nav .logo{
+        column-gap: 5px !important;
+    }
+    nav .logo span {
+        font-size: 14px !important;
+    }
+    nav .logo img {
+        width: 26px !important;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 768px) {
+    nav .logo span {
+        font-size: 1rem !important;
+    }
+    nav .logo img {
+        width: 28px !important;
+    }
+}
