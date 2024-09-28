@@ -3,5 +3,3 @@ spring:
     active: dev
   application:
     name: ecommerce
-server:
-  port: 8080

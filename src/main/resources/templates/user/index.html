@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Ecommerce de sillas gamer - Slam Racing">
+    <meta name="keywords" content="Slam Racing, E-commerce, Tienda online, Sillas gamer">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Grupo 03 - Marcos de desarrollo web">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/hoverNavElements.css">
+    <link rel="stylesheet" href="/css/carritoStyle.css">
+    <link rel="stylesheet" href="/css/responsiveHeader.css">
+    <link rel="stylesheet" href="/css/home/responsiveHero.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Slam Racing | Diseño Racing. Rendimiento gamer">
+    <meta property="og:description" content="Las mejoras sillas calidad-precio del Perú">
+    <meta property="og:image" content="/images/SEO/SlamRacing.jpg">
+    <meta property="og:url" content="www.slamracing.com">
+
+    <title th:text="#{home.titulo}">Slam Racing | Diseño Racing. Rendimiento gamer.</title>
+</head>
+
+<body style="overflow-x: hidden">
+
+<header th:replace="~{user/components/header.html::header}"></header>
+
+<!--    Hero Section    -->
+<section class="d-flex flex-column flex-xl-row position-relative justify-content-around align-items-center px-4 px-lg-5"
+         style="height: 89vh; background: linear-gradient(0deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.65) 100%), url('/images/home/Hero.jpg') lightgray 50% / cover no-repeat;">
+
+    <!-- Texto del Hero -->
+    <div class="d-flex flex-column align-items-center text-white z-1 col col-12 col-xl-5" id="heroTexto" >
+        <h1 class="text-white fw-bold fs-1 mb-3" th:text="#{home.hero.titulo}">Mejora tu experiencia de juego</h1>
+        <p class="text-white fw-normal mb-4" th:text="#{home.hero.descripcion}">Domina cada juego con nuestras sillas gaming ergonómicas y de alto
+            rendimiento. Diseñadas para la comodidad, fabricadas para la victoria.</p>
+        <div class="d-flex justify-content-between justify-content-md-start" style="width: 100%;">
+            <a href="#" class="btn btn-light text-black me-0 me-md-5 fs-5 px-4 py-2 rounded-0" th:text="#{home.hero.boton_comprar}">Comprar ahora</a>
+            <a href="#" class="btn btn-light text-black fs-5 px-4 py-2 rounded-0" th:text="#{home.hero.boton_ver}">Ver colección</a>
+        </div>
+    </div>
+
+    <!-- Imagen del Hero -->
+    <div class="position-relative d-flex justify-content-center z-1 mt-4 mt-lg-0 col col-12 col-xl-7" style="width: fit-content;">
+        <img id="imgHero" class="w-100" src="/images/home/sillasHero.png" alt="Sillas Slam Racing">
+        <div id="descripcionSilla" class="d-flex position-absolute flex-column" style="bottom: 60px;">
+            <div class="position-absolute bg-black"
+                 style="filter: blur(25px); width: 100%; height: 100%; z-index: 1"></div>
+            <p class="text-white text-center fs-3 fw-normal m-0" style="line-height: 1; z-index: 2" th:text="#{home.hero.imagen.descripcion}">Una nueva generación
+                de ergonomía</p>
+            <h3 class="text-white text-center fs-1 fw-bold m-0" style="z-index: 2">SLAM RACING <span
+                    style="color: #E8D087;">GRAND SERIES™</span></h3>
+        </div>
+    </div>
+
+    <!-- Background Blur -->
+    <div id="backgroundBlur" style="position: absolute; z-index: 0; width: 60vw; height: 100%; right: 0; top: 0; backdrop-filter: blur(50px); background: rgba(0, 0, 0, 0.70); clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);"></div>
+</section>
+
+<main>
+    <!--    Diferenciales    -->
+    <section class="p-5 text-center">
+        <h2 class="fs-1 fw-bold mb-5" th:text="#{home.diferencial.porque_elegir}">¿Por Qué Elegir Nuestras Sillas?</h2>
+        <div class="row justify-content-center mt-4">
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex flex-column align-items-center row-gap-3">
+                <div class="rounded-circle bg-black d-flex justify-content-center align-items-center" style="width: 50px; height: 50px;">
+                    <svg class="text-white" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="m18 15-6-6-6 6"/>
+                    </svg>
+                </div>
+                <h3 class="m-0 fs-5 fw-bold" th:text="#{home.diferencial.diseno_ergonomico}">Diseño Ergonómico</h3>
+                <p class="m-0" th:text="#{home.diferencial.diseno_ergonomico.descripcion}">Brinda apoyo a tu espalda para que puedas jugar cómodamente durante horas.</p>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex flex-column align-items-center row-gap-3">
+                <div class="rounded-circle bg-black d-flex justify-content-center align-items-center" style="width: 50px; height: 50px;">
+                    <svg class="text-white" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+                    </svg>
+                </div>
+                <h3 class="m-0 fs-5 fw-bold" th:text="#{home.diferencial.calidad_premium}">Calidad Premium</h3>
+                <p class="m-0" th:text="#{home.diferencial.calidad_premium.descripcion}">Construido con materiales duraderos para un rendimiento duradero.</p>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex flex-column align-items-center row-gap-3">
+                <div class="rounded-circle bg-black d-flex justify-content-center align-items-center" style="width: 50px; height: 50px;">
+                    <svg class="text-white" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 7h-9"/>
+                        <path d="M14 17H5"/>
+                        <circle cx="17" cy="17" r="3"/>
+                        <circle cx="7" cy="7" r="3"/>
+                    </svg>
+                </div>
+                <h3 class="m-0 fs-5 fw-bold" th:text="#{home.diferencial.personalizable}">Personalizable</h3>
+                <p class="m-0" th:text="#{home.diferencial.personalizable.descripcion}">Ajuste su silla para adaptarla a su posición de juego perfecta.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!--    Suscripción noticias    -->
+    <section class="bg-black text-white p-5 d-flex flex-column align-items-center" id="suscribirse">
+        <h2 class="fs-1 fw-bold text-center" th:text="#{home.suscripcion.listo}">¿Estás Listo Para Mejorar Tu Setup Gamer?</h2>
+        <p class="fs-5 mb-1 text-center" style="max-width: 78%" th:text="#{home.suscripcion.listo.descripcion}">Únete a las filas de los jugadores de élite. Experimenta el futuro de la comodidad y el rendimiento en los juegos.</p>
+
+        <!-- Formulario de suscripción -->
+        <form class="d-flex flex-column flex-md-row align-items-center mt-4 column-gap-2 w-100" style="max-width: 600px;">
+            <input class="py-2 px-3 border-0 rounded-2 flex-grow-1 mb-2 mb-md-0" type="email" placeholder="Ingresa tu correo" th:placeholder="#{home.suscripcion.formulario.placeholder}" required>
+            <button class="d-flex align-items-center py-2 px-3 rounded-2 border-0 text-white" style="background-color: #252525;" type="submit">
+                <span th:text="#{home.suscripcion.formulario.boton}">Suscribirse</span>
+                <i class="bi bi-chevron-right ms-2" style="font-size: 16px;"></i>
+            </button>
+        </form>
+
+        <!-- Descripción de los términos y condiciones -->
+        <div class="fw-light mt-2 d-flex flex-column flex-md-row justify-content-center align-items-center text-center" style="font-size: 10px;">
+            <p class="mb-0 me-md-1" th:text="#{home.suscripcion.formulario.descripcion}">¡Regístrate para recibir actualizaciones de productos y ofertas exclusivas!.</p>
+            <a href="#terminosYcondiciones" class="fw-normal text-white text-decoration-underline mt-1 mt-md-0" th:text="#{home.suscripcion.formulario.terminos}">Términos y condiciones</a>
+        </div>
+    </section>
+
+
+    <!--    Setups clientes    -->
+    <section class="bg-black text-white pb-5 d-flex flex-column align-items-center overflow-hidden" id="slider">
+        <div class="d-flex" id="slides" style="transition: transform 0.5s ease-in-out;">
+            <img style="width: 100%; max-width: 100%; flex: 0 0 20%;" src="/images/home/slider/setup1.png"
+                 alt="Setup 1">
+            <img style="width: 100%; max-width: 100%; flex: 0 0 20%;" src="/images/home/slider/setup2.png"
+                 alt="Setup 2">
+            <img style="width: 100%; max-width: 100%; flex: 0 0 20%;" src="/images/home/slider/setup3.png"
+                 alt="Setup 3">
+            <img style="width: 100%; max-width: 100%; flex: 0 0 20%;" src="/images/home/slider/setup4.png"
+                 alt="Setup 4">
+            <img style="width: 100%; max-width: 100%; flex: 0 0 20%;" src="/images/home/slider/setup5.png"
+                 alt="Setup 5">
+            <img style="width: 100%; max-width: 100%; flex: 0 0 20%;" src="/images/home/slider/setup6.png"
+                 alt="Setup 6">
+            <img style="width: 100%; max-width: 100%; flex: 0 0 20%;" src="/images/home/slider/setup7.png"
+                 alt="Setup 7">
+            <img style="width: 100%; max-width: 100%; flex: 0 0 20%;" src="/images/home/slider/setup8.png"
+                 alt="Setup 8">
+            <img style="width: 100%; max-width: 100%; flex: 0 0 20%;" src="/images/home/slider/setup9.png"
+                 alt="Setup 9">
+        </div>
+    </section>
+</main>
+
+<div th:insert="~{user/components/carrito.html::modalCarrito}"></div>
+
+<footer th:replace="~{user/components/footer.html::footer}"></footer>
+
+<script src="/js/home/slideController.js"></script>
+<script src="/js/carrito.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
