@@ -1,0 +1,19 @@
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ecommerce_image
+    container_name: ecommerce_container
+    environment:
+      TZ: America/Lima
+    ports:
+      - "8080:8080"
+    networks:
+      - database_db_mysql
+    restart: always
+
+networks:
+    database_db_mysql:
+        external: true
