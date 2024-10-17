@@ -9,11 +9,11 @@
       </div>
 
       <!-- Logo -->
-      <div class="logo d-flex align-items-center text-white column-gap-2">
+      <a href="/" class="logo d-flex align-items-center text-white column-gap-2">
         <span class="fs-5" style="font-family: 'Michroma',  sans-serif; font-weight: 400; font-style: normal;">Slam</span>
         <img src="/images/LogoSlamRacingWhite.svg" style="width: 34px;" alt="Logo de Slam Racing">
         <span class="fs-5" style="font-family: 'Michroma',  sans-serif; font-weight: 400; font-style: normal;">Racing</span>
-      </div>
+      </a>
 
       <!-- Menu desplegable -->
       <div class="offcanvas offcanvas-start bg-black" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
@@ -30,7 +30,7 @@
         <div class="offcanvas-body justify-content-center">
           <ul class="navbar-nav d-flex column-gap-4">
             <li class="nav-item">
-              <a class="nav-link text-white hover-animate" href="#" th:text="#{header.menu.productos}">Productos</a>
+              <a class="nav-link text-white hover-animate" href="productos" th:text="#{header.menu.productos}">Productos</a>
             </li>
             <li class="nav-item">
               <a class="nav-link text-white hover-animate" href="#" th:text="#{header.menu.nosotros}">Sobre Nosotros</a>
@@ -39,7 +39,7 @@
               <a class="nav-link text-white hover-animate" href="#" th:text="#{header.menu.soporte}">Soporte y Garantía</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white hover-animate" href="#" th:text="#{header.menu.contacto}">Contacto</a>
+              <a class="nav-link text-white hover-animate" href="/contacto" th:text="#{header.menu.contacto}">Contacto</a>
             </li>
           </ul>
         </div>

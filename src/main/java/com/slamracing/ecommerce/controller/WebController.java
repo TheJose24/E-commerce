@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
@@ -12,6 +13,8 @@ import java.util.Locale;
 
 @Controller
 public class WebController {
+
+    String PAGINA_ACTUAL;
 
     @GetMapping("/cambiar_idioma")
     public String changeLanguage(@RequestParam("idioma") String lang, HttpSession session) {
@@ -31,16 +34,40 @@ public class WebController {
 
         // Establecer el Locale en la sesión
         session.setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, newLocale);
-        return "redirect:/";
+        return "redirect:/"+PAGINA_ACTUAL;
     }
 
     @GetMapping("/")
     public String home(Model model, Locale locale) {
-        // Mostrar el idioma actual en mayúsculas
+        PAGINA_ACTUAL="";
+        // Mostramos el idioma actual en mayúsculas
         model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
         return "user/index";
     }
 
+    @GetMapping("/productos")
+    public String producto(Model model, Locale locale) {
+        PAGINA_ACTUAL="productos";
+        // Mostrar el idioma actual en mayúsculas
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+        return "user/producto";
+    }
+
+    @GetMapping("/contacto")
+    public String contacto(Model model, Locale locale) {
+        PAGINA_ACTUAL="contacto";
+        // Mostramos el idioma actual en mayúsculas
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+        return "user/contacto";
+    }
+
+    // Manejamos el envío del formulario de contacto
+    @PostMapping("/formularioContacto")
+    public String enviarFormularioContacto(@RequestParam String nombre,@RequestParam  String correo, @RequestParam String mensaje) {
+        System.out.println("nombre :"+ nombre + ", correo :"+ correo + ", mensaje :"+ mensaje);
+
+        return "redirect:/contacto"; // Retorna a la vista de contacto
+    }
 
 
 
