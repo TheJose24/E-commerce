@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -25,12 +26,13 @@ public class SuscriptorNewsletterEntity {
     @Column(nullable = false, length = 100, unique = true)
     private String email;
 
-    @Column(length = 100)
-    private String nombre;
-
-    @Column(name = "fecha_suscripcion", nullable = false, updatable = false)
+    @Column(name = "fecha_suscripcion", updatable = false)
     @CreatedDate
     private LocalDateTime fechaSuscripcion;
+
+    @Column(name = "fecha_modificacion")
+    @LastModifiedDate
+    private LocalDateTime fechaModificacion;
 
     @Column(nullable = false)
     private Boolean estado = true;
