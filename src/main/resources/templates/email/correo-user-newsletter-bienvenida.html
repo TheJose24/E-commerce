@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido a Slam Racing</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #0a0a0a;">
+<div style="max-width: 600px; margin: 0 auto; background-color: #141414; padding: 20px;">
+    <!-- Header con logo -->
+    <div style="text-align: center; padding: 20px; background-color: #000000;">
+        <img src="https://slamracing.devbyjose.studio/images/email/LogoSlamRacing.png" alt="Slam Racing" style="max-width: 200px;">
+    </div>
+
+    <div style="padding: 20px; color: #ffffff;">
+        <h1 style="color: #ffffff; margin-bottom: 20px; font-weight: 300;">Bienvenido a una nueva generación de ergonomía</h1>
+
+        <div style="background-color: #1a1a1a; border-radius: 4px; padding: 20px; margin-bottom: 20px;">
+            <p>Estimado <span th:text="${usuario.email}">[Nombre]</span>,</p>
+
+            <p>Gracias por unirte a Slam Racing. Has dado el primer paso hacia una experiencia de rendimiento superior con nuestras sillas ergonómicas de alto rendimiento.</p>
+        </div>
+
+        <div style="background-color: #1a1a1a; border-radius: 4px; padding: 20px;">
+            <h2 style="color: #C5A47E; font-weight: 300; margin-bottom: 20px;">Beneficios exclusivos</h2>
+
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                    <span style="color: #C5A47E; margin-right: 10px;">•</span>
+                    <span>Acceso anticipado a nuevos lanzamientos</span>
+                </li>
+                <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                    <span style="color: #C5A47E; margin-right: 10px;">•</span>
+                    <span>Ofertas exclusivas para miembros</span>
+                </li>
+                <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                    <span style="color: #C5A47E; margin-right: 10px;">•</span>
+                    <span>Guías de configuración personalizada</span>
+                </li>
+                <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                    <span style="color: #C5A47E; margin-right: 10px;">•</span>
+                    <span>Contenido exclusivo sobre ergonomía y rendimiento</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Sección de código promocional -->
+        <div style="text-align: center; margin: 30px 0; background-color: #1a1a1a; padding: 20px; border-radius: 4px;">
+            <p style="margin: 0; font-size: 14px; color: #C5A47E;">CÓDIGO DE BIENVENIDA</p>
+            <p style="font-size: 24px; color: #ffffff; margin: 10px 0;">WELCOME10</p>
+            <p style="margin: 0; font-size: 12px;">Disfruta de un 10% de descuento en tu primera compra</p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="https://slamracing.devbyjose.studio/productos" style="background-color: #C5A47E; color: #000000; padding: 15px 30px; text-decoration: none; border-radius: 4px; display: inline-block; font-weight: 500;">Ver colección</a>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0; padding: 20px; background-color: #1a1a1a; border-radius: 4px;">
+            <p style="color: #C5A47E; margin-bottom: 15px;">Síguenos en redes sociales</p>
+            <a href="https://www.instagram.com/slam_racing/" style="margin: 0 15px; text-decoration: none; color: #ffffff;">Instagram</a>
+            <a href="https://www.facebook.com/slamracing.pe/" style="margin: 0 15px; text-decoration: none; color: #ffffff;">Facebook</a>
+            <a href="https://www.youtube.com/@slamracing/featured" style="margin: 0 15px; text-decoration: none; color: #ffffff;">YouTube</a>
+            <a href="https://www.tiktok.com/@slamracing" style="margin: 0 15px; text-decoration: none; color: #ffffff;">TikTok</a>
+        </div>
+
+        <hr style="border: 1px solid #2b2b2b; margin: 20px 0;">
+
+        <p style="font-size: 12px; color: #808080; text-align: center;">
+            Este email fue enviado a <span th:text="${usuario.email}">[email]</span> porque te suscribiste a nuestro newsletter.<br>
+            Si deseas dejar de recibir nuestros correos, puedes <a th:href="'https://slamracing.devbyjose.studio/api/email/desuscripcion-noticias/' + ${usuario}" style="color: #C5A47E;">cancelar tu suscripción aquí</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>

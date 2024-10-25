@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = form.email.value;
         console.log(email);
 
-        fetch('/suscripcionNoticias', {
+        fetch('/api/email/suscripcion-noticias', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

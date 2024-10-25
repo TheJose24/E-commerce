@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
+
+
+    <title>Slam Admin | Productos.</title>
+</head>
+<body>
+
+    <main>
+        <div th:insert="~{admin/components/menuLateral.html::sidebar}" class="w-[17.57%]"></div>
+
+
+        <div class="d-flex flex-column position-relative" style="width: calc(100% - 17.57%); min-height: 100vh;">
+
+            <header class="w-100 d-flex justify-content-between align-items-center px-4 py-3" style="height: 13%;">
+                <div class="h-auto">
+                    <h1 class="font-weight-bold" style="font-size: 1.25rem;">Productos</h1>
+                    <p class="font-weight-medium text-muted" style="font-size: 0.875rem;" th:text="${fechaHoraActual}"></p>
+                </div>
+
+                <form class="d-flex align-items-center w-50 bg-dark text-white rounded-lg px-3 py-2">
+                    <svg class="mr-2" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 20C15.9706 20 20 15.9706 20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M18.9299 20.6898C19.4599 22.2898 20.6699 22.4498 21.5999 21.0498C22.4499 19.7698 21.8899 18.7198 20.3499 18.7198C19.2099 18.7098 18.5699 19.5998 18.9299 20.6898Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <input class="border-0 bg-dark text-white w-100" type="text" name="buscar" placeholder="Buscar" style="outline: none;">
+                </form>
+            </header>
+
+            <div class="d-flex flex-column align-items-center justify-content-between w-100 h-100 bg-light">
+                <div class="d-flex flex-column gap-3 w-95 bg-white border border-dark rounded-lg p-4 mt-4">
+                    <h2 class="font-weight-medium" style="font-size: 1.25rem;">Lista de productos</h2>
+                    <table class="table table-sm">
+                        <thead>
+                        <tr class="border-bottom">
+                            <th class="text-left" style="width: 7.125rem;">Id Producto</th>
+                            <th class="text-left" style="width: 8.688rem;">Nombre</th>
+                            <th class="text-left" style="width: 10.25rem;">Descripción</th>
+                            <th class="text-left" style="width: 7.813rem;">Color</th>
+                            <th class="text-left" style="width: 7.813rem;">Material</th>
+                            <th class="text-left" style="width: 7.813rem;">Precio</th>
+                            <th class="text-left" style="width: 7.813rem;">Descuento</th>
+                            <th class="text-left" style="width: 6.438rem;">Stock</th>
+                            <th class="text-left" style="width: 2.625rem;">Acción</th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="producto:${productos}">
+                        <!-- Iteracion de productos -->
+
+                        <tr
+                                class="h-14 border-b border-solid border-black" th:id="${producto.id}">
+                            <td class="pr-6" th:text="'#'+${producto.id}"></td>
+                            <td class="pr-6" th:text="${producto.nombre}"></td>
+                            <td class="pr-6" th:text="${#strings.abbreviate(producto.descripcion, 34)}"></td>
+                            <td class="pr-6" th:text="${producto.color}"></td>
+                            <td class="pr-6" th:text="${producto.material}"></td>
+                            <td class="pr-6" th:text="${producto.precio_unitario}"></td>
+                            <td class="pr-6">
+                                <span th:text="${producto.descuento} + '%'"></span>
+                                (<span th:text="${producto.precio_unitario - (producto.precio_unitario * producto.descuento / 100)}"></span>)
+                            </td>
+                            <td th:text="${producto.stock}"></td>
+                            <td>
+                                <div class="flex">
+                                    <button class="editar-btn py-1 px-2 rounded-lg hover:bg-yellow">
+                                        <svg class="w-4 h-4"
+                                             xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                            <path d="M16.2141 4.98239L17.6158 3.58063C18.39 2.80646 19.6452 2.80646 20.4194 3.58063C21.1935 4.3548 21.1935 5.60998 20.4194 6.38415L19.0176 7.78591M16.2141 4.98239L10.9802 10.2163C9.93493 11.2616 9.41226 11.7842 9.05637 12.4211C8.70047 13.058 8.3424 14.5619 8 16C9.43809 15.6576 10.942 15.2995 11.5789 14.9436C12.2158 14.5877 12.7384 14.0651 13.7837 13.0198L19.0176 7.78591M16.2141 4.98239L19.0176 7.78591" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M21 12C21 16.2426 21 18.364 19.682 19.682C18.364 21 16.2426 21 12 21C7.75736 21 5.63604 21 4.31802 19.682C3 18.364 3 16.2426 3 12C3 7.75736 3 5.63604 4.31802 4.31802C5.63604 3 7.75736 3 12 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        </svg>
+                                    </button>
+                                    <a th:href="@{/producto/eliminarProducto/{id} (id=${producto.id}) }"
+                                       class="eliminar-btn py-1 px-2 ml-1 rounded-lg hover:bg-red hover:text-white">
+                                        <svg class="w-4 h-4"
+                                             xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                            <path d="M19.5 5.5L18.8803 15.5251C18.7219 18.0864 18.6428 19.3671 18.0008 20.2879C17.6833 20.7431 17.2747 21.1273 16.8007 21.416C15.8421 22 14.559 22 11.9927 22C9.42312 22 8.1383 22 7.17905 21.4149C6.7048 21.1257 6.296 20.7408 5.97868 20.2848C5.33688 19.3626 5.25945 18.0801 5.10461 15.5152L4.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                            <path d="M3 5.5H21M16.0557 5.5L15.3731 4.09173C14.9196 3.15626 14.6928 2.68852 14.3017 2.39681C14.215 2.3321 14.1231 2.27454 14.027 2.2247C13.5939 2 13.0741 2 12.0345 2C10.9688 2 10.436 2 9.99568 2.23412C9.8981 2.28601 9.80498 2.3459 9.71729 2.41317C9.32164 2.7167 9.10063 3.20155 8.65861 4.17126L8.05292 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                            <path d="M9.5 16.5L9.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                            <path d="M14.5 16.5L14.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr class="formulario-edicion h-14 hidden" th:id="formulario-edicion-+${producto.id}">
+                            <td colspan="10">
+                                <form th:action="@{/producto/actualizarProducto}" method="post" enctype="multipart/form-data"
+                                      class="flex justify-between flex-wrap gap-y-3 py-3 bg-white">
+                                    <input type="hidden" name="id" th:value="${producto.id}">
+                                    <input class="px-1.5 py-1" type="text" name="nombre" placeholder="Nombre" autocomplete="off">
+                                    <input class="px-1.5 py-1" type="text" name="descripcion" placeholder="Descripcion" autocomplete="off" >
+                                    <input class="w-20 px-1.5 py-1" type="text" name="color" placeholder="Color" autocomplete="off" >
+                                    <input class="w-20 px-1.5 py-1" type="text" name="material" placeholder="Material" autocomplete="off" >
+
+                                    <input class="w-20 px-1.5 py-1" type="number" name="precio_unitario" placeholder="Precio" min="0" autocomplete="off" >
+                                    <input class="w-24 px-1.5 py-1" type="number" name="descuento" placeholder="Descuento" min="0" autocomplete="off" >
+                                    <input class="w-20 px-1.5 py-1" type="number" name="stock" placeholder="Stock" min="0" autocomplete="off" >
+                                    <div class="w-full flex flex-wrap gap-1.5 border border-solid border-greyBlue rounded-lg"
+                                         id="contenedor-imagen">
+
+                                        <div th:each="imagen, iterStat : ${producto.imagenes}"
+                                             class="imagen flex w-32 relative" th:id="${iterStat.index}">
+                                            <img th:id="'imagen-' + ${iterStat.index}"
+                                                 th:src="@{/images/{img} (img=${imagen.url})}"
+                                                 th:alt="${producto.nombre}"
+                                                 class="object-contain"
+                                            >
+                                            <div class="flex absolute top-0 left-0 w-full h-full opacity-0 text-white rounded-md
+                                                justify-center items-center hover:opacity-100 hover:bg-black/[0.8] hover:backdrop-blur-sm">
+                                                <label class="nombre-archivo" th:for="'imagenEdicion-'+${iterStat.index}">
+                                                    Cambiar imagen
+                                                </label>
+                                                <input th:id="'imagenEdicion-'+${iterStat.index}" name="imagen"
+                                                       type="file" accept="image/*"
+                                                       class="imagen-input edicion absolute opacity-0 w-full h-full"
+                                                       th:data-index="${iterStat.index}">
+                                            </div>
+                                        </div>
+                                        <div id="nuevaImagenBtnEdicion" class="flex w-32 relative">
+                                            <button class="w-full h-full text-black hover:text-white hover:bg-black/[0.8] flex flex-col items-center justify-center rounded-md">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     class="w-6 h-6" viewBox="0 0 24 24" width="32" height="32" color="currentColor" fill="none">
+                                                    <path d="M12 8V16M16 12L8 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12Z" stroke="currentColor" stroke-width="1.5" />
+                                                </svg>
+                                                Nueva Imagen
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                    <button type="submit" class="guardar-btn py-1 px-3 rounded-3xl bg-green">Guardar</button>
+                                    <button type="button" class="cancelar-btn py-1 px-3 rounded-3xl text-white bg-red">Cancelar</button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+                <a id="openModalBtn" class="bg-black p-3 rounded-3xl mb-9 font-poppins font-medium text-base text-white">
+                    <button class="flex">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 12L19 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Añadir nuevo producto
+                    </button>
+                </a>
+            </div>
+
+
+
+            <div id="modalContainer"
+                 class="absolute w-full h-auto z-10 inset-0 hidden overflow-auto flex justify-center font-poppins bg-whiteLight ">
+                <div class="rounded-xl border border-solid bg-white border-lightGray h-fit my-5 px-10 py-7">
+                    <p class="text-base font-medium mb-12">Registro de producto nuevo</p>
+                    <form th:action="@{/producto/agregarProducto}" method="post" enctype="multipart/form-data"
+                          class="flex flex-col gap-y-12 text-greyBlue w-full max-w-[59.375rem]">
+                        <div class="flex flex-wrap justify-between">
+                            <div class="flex flex-col w-[45%]">
+                                <label class="flex text-sm" for="nombre">
+                                    Nombre del producto
+                                    <svg class="mt-0.5 ml-0.5"
+                                         width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3.02273 6.54545L3.10227 4.35795L1.25284 5.53125L0.775568 4.69602L2.72443 3.68182L0.775568 2.66761L1.25284 1.83239L3.10227 3.00568L3.02273 0.818182H3.97727L3.89773 3.00568L5.74716 1.83239L6.22443 2.66761L4.27557 3.68182L6.22443 4.69602L5.74716 5.53125L3.89773 4.35795L3.97727 6.54545H3.02273Z" fill="#D63928"/>
+                                    </svg>
+                                </label>
+                                <input class="text-black focus:outline-none border border-solid border-lightGray100 rounded-md px-3 py-1"
+                                       id="nombre" name="nombre" type="text" required placeholder="Ej: SRF1 Leather" autocomplete="off">
+                            </div>
+                            <div class="flex flex-col w-[45%]">
+                                <label class="flex text-sm" for="precio_unitario">
+                                    Precio del producto
+                                    <svg class="mt-0.5 ml-0.5"
+                                         width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3.02273 6.54545L3.10227 4.35795L1.25284 5.53125L0.775568 4.69602L2.72443 3.68182L0.775568 2.66761L1.25284 1.83239L3.10227 3.00568L3.02273 0.818182H3.97727L3.89773 3.00568L5.74716 1.83239L6.22443 2.66761L4.27557 3.68182L6.22443 4.69602L5.74716 5.53125L3.89773 4.35795L3.97727 6.54545H3.02273Z" fill="#D63928"/>
+                                    </svg>
+                                </label>
+                                <div class="flex border border-solid border-lightGray100 rounded-md px-3 py-1">
+                                    <p>S/.</p>
+                                    <input class="text-black focus:outline-none w-full" id="precio_unitario" type="number"
+                                           name="precio_unitario" required autocomplete="off" min="0" placeholder="0.00">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <div class="flex flex-col w-full">
+                                <label class="text-sm" for="descripcion">
+                                    Descripción del producto
+                                </label>
+                                <textarea class="text-black h-20 focus:outline-none border border-solid border-lightGray100 rounded-md px-3 py-1"
+                                          id="descripcion" name="descripcion" type="text" placeholder="Ej: Silla gamer de alta calidad" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap justify-between gap-y-4 max-w-xl"
+                             id="contenedorImagenes">
+                            <div class="flex flex-col w-[45%]">
+                                <label class="flex text-sm" for="stock">
+                                    Stock disponible
+                                    <svg class="mt-0.5 ml-0.5"
+                                         width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3.02273 6.54545L3.10227 4.35795L1.25284 5.53125L0.775568 4.69602L2.72443 3.68182L0.775568 2.66761L1.25284 1.83239L3.10227 3.00568L3.02273 0.818182H3.97727L3.89773 3.00568L5.74716 1.83239L6.22443 2.66761L4.27557 3.68182L6.22443 4.69602L5.74716 5.53125L3.89773 4.35795L3.97727 6.54545H3.02273Z" fill="#D63928"/>
+                                    </svg>
+                                </label>
+                                <input class="text-black focus:outline-none border border-solid border-lightGray100 rounded-md px-3 py-1"
+                                       id="stock" name="stock" type="number" placeholder="0" min="0" required autocomplete="off">
+                            </div>
+                            <div class="flex flex-col justify-between w-[45%]">
+                                <label class="text-sm" for="imagenUrl">
+                                    Imagen principal
+                                </label>
+                                <div class="flex justify-center items-center border border-solid border-grey rounded-lg relative hover:bg-grey hover:text-white px-4 py-1 text-black text-sm">
+                                    <svg class="mr-1.5"
+                                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M13 2H13.2727C16.5339 2 18.1645 2 19.2969 2.79784C19.6214 3.02643 19.9094 3.29752 20.1523 3.60289C21 4.66867 21 6.20336 21 9.27273V11.8182C21 14.7814 21 16.2629 20.5311 17.4462C19.7772 19.3486 18.1829 20.8491 16.1616 21.5586C14.9044 22 13.3302 22 10.1818 22C8.38275 22 7.48322 22 6.76478 21.7478C5.60979 21.3424 4.69875 20.4849 4.26796 19.3979C4 18.7217 4 17.8751 4 16.1818V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M21 12C21 13.8409 19.5076 15.3333 17.6667 15.3333C17.0009 15.3333 16.216 15.2167 15.5686 15.3901C14.9935 15.5442 14.5442 15.9935 14.3901 16.5686C14.2167 17.216 14.3333 18.0009 14.3333 18.6667C14.3333 20.5076 12.8409 22 11 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M11 6L3 6M7 2V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    </svg>
+                                    <p class="nombre-archivo">Agregar imagen</p>
+                                    <input id="imagenUrl" name="imagen" type="file" accept="image/*" class="imagen-input absolute opacity-0 w-full">
+                                </div>
+                            </div>
+
+                            <div class="flex justify-center w-full" id="nuevaImagenBtn">
+                                <button class="w-2/5 flex justify-center bg-grey text-white rounded-2xl py-1">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 5V19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M5 12L19 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Nueva imagen
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap justify-between">
+                            <div class="flex flex-col w-[45%]">
+                                <label class="flex text-sm" for="color">
+                                    Color del producto
+                                </label>
+                                <input class="text-black focus:outline-none border border-solid border-lightGray100 rounded-md px-3 py-1"
+                                       id="color" name="color" type="text" placeholder="Ej: Black, Grey, etc" required autocomplete="off">
+                            </div>
+
+                            <div class="flex flex-col w-[45%]">
+                                <label class="flex text-sm" for="material">
+                                    Material del producto
+                                </label>
+                                <input class="text-black focus:outline-none border border-solid border-lightGray100 rounded-md px-3 py-1"
+                                       id="material" name="material" type="text" placeholder="Ej: Cuero Prime™" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap justify-between">
+                            <button class="w-[20%] border border-solid text-black border-lightGray100 rounded-md px-3 py-1"
+                                    id="cancelBtn">Cancelar</button>
+                            <button class="w-[75%] bg-black text-white border border-solid rounded-md px-3 py-1"
+                                    type="submit">Guardar</button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
