@@ -1,5 +1,6 @@
 package com.slamracing.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "productos")
@@ -38,7 +40,15 @@ public class ProductoEntity {
 
     private Integer stock;
 
+    private Integer descuento;
+
+    private String color;
+
+    private String material;
+
     private Boolean activo = true;
+
+    private String slug;
 
     @Column(name = "fecha_creacion", updatable = false)
     @CreatedDate
@@ -47,4 +57,12 @@ public class ProductoEntity {
     @Column(name = "fecha_actualizacion")
     @LastModifiedDate
     private LocalDateTime fechaActualizacion;
+
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+    private List<GaleriaImagenEntity> imagenes;
+
+
+    private int numOpiniones;
+
+    private double puntuacionPromedio;
 }
