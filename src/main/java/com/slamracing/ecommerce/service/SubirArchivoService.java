@@ -15,6 +15,12 @@ public class SubirArchivoService {
     public String guardarImagen(MultipartFile file) {
         if (!file.isEmpty()) {
             try {
+
+                File directorio = new File(folder);
+                if (!directorio.exists()) {
+                    directorio.mkdirs();
+                }
+
                 byte[] bytes = file.getBytes();
                 Path path = Paths.get(folder + file.getOriginalFilename());
                 Files.write(path, bytes);
