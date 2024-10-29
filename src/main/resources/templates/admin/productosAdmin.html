@@ -179,16 +179,18 @@
                                 <div class="mb-3">
                                     <label for="imagenesActuales" class="form-label">Imágenes actuales</label>
                                     <div id="imagenesActuales" class="d-flex flex-wrap">
-                                        <!-- Aquí se agregarán las imágenes -->
+                                        <!-- Aquí se agregan las imágenes -->
                                     </div>
                                 </div>
 
-                                <!-- Campo para subir nuevas imágenes -->
+                                <!-- Campo para subir nuevas imágenes dinámicamente -->
                                 <div class="mb-3">
-                                    <label for="nuevasImagenes" class="form-label">Reemplazar Imágenes</label>
-                                    <input type="file" class="form-control" id="nuevasImagenes" name="imagen" multiple>
-                                    <div class="form-text">Puedes subir varias imágenes a la vez.</div>
+                                    <label class="form-label">Agregar nuevas imágenes</label>
+                                    <div id="imagenContainerEdicion">
+                                        <input type="file" class="form-control mb-2" name="imagen">
+                                    </div>
                                 </div>
+                                <button type="button" class="btn btn-secondary" id="agregarImagenEdicion">Añadir otra imagen</button>
                                 <button type="submit" class="btn btn-primary">Actualizar Producto</button>
                             </form>
                         </div>
@@ -211,6 +213,17 @@
 
         // Añadir el nuevo input al contenedor
         document.getElementById('imagenContainer').appendChild(newInput);
+    });
+
+    document.getElementById('agregarImagenEdicion').addEventListener('click', function() {
+        // Crear un nuevo input de archivo
+        const newInput = document.createElement('input');
+        newInput.type = 'file';
+        newInput.name = 'imagen';
+        newInput.className = 'form-control mb-2';
+
+        // Añadir el nuevo input al contenedor
+        document.getElementById('imagenContainerEdicion').appendChild(newInput);
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

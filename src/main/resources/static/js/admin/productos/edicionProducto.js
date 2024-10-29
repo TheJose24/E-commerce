@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 imgElement.src = "/productoImages/"+url;
                 imgElement.alt = "Imagen del producto";
                 imgElement.classList.add('img-thumbnail', 'me-2');
-                imgElement.style.width = "100px";
+                imgElement.style.width = "150px";
                 imagenesContainer.appendChild(imgElement);
             });
         });

@@ -54,7 +54,8 @@ public class ProductoController {
 
 
     @PostMapping("/actualizarProducto")
-    public String actualizarProducto(@ModelAttribute ProductoEntity producto, @RequestParam("imagen") MultipartFile[] files) {
+    public String actualizarProducto(@ModelAttribute ProductoEntity producto,
+                                     @RequestParam("imagen") MultipartFile[] files) {
         // Busca el producto en la base de datos
         System.out.println("=============================================");
         ProductoEntity productodb = productoService.buscarProductoPorId(producto.getProductoId());
