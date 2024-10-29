@@ -78,6 +78,14 @@ public class WebController {
         return "user/contacto";
     }
 
+    @GetMapping("sobre_nosotros")
+    public String sobre_nosotros(Model model, Locale locale) {
+        PAGINA_ACTUAL="sobre_nosotros";
+        // Mostramos el idioma actual en mayúsculas
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+        return "user/sobre_nosotros";
+    }
+
     // Manejamos el envío del formulario de contacto
     @PostMapping("/formularioContacto")
     public String enviarFormularioContacto(@RequestParam String nombre,@RequestParam  String correo, @RequestParam String mensaje) {
