@@ -28,8 +28,6 @@ public class CategoriaEntity {
     @Column(length = 50, nullable = false)
     private String nombre;
 
-    private String descripcion;
-
     @Column(name = "fecha_creacion", updatable = false)
     @CreatedDate
     private LocalDateTime fechaCreacion;

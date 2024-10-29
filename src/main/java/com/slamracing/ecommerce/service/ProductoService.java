@@ -53,7 +53,7 @@ public class ProductoService {
                 .orElseThrow (() -> new RuntimeException("Producto no encontrado"));
     }
     public List<ResenaEntity> opinionesPorProducto(Long idProducto) {
-        return resenaRepository.findByProductoId(idProducto);
+        return resenaRepository.findByProductoProductoId(idProducto);
     }
     public String generarNombreUrl(String nombre, String color) {
         return nombre.toLowerCase().replace(" ", "-") + "-" + color.toLowerCase().replace(" ", "-");
@@ -61,6 +61,8 @@ public class ProductoService {
     }
 
     public ProductoEntity agregarProducto(ProductoEntity producto) {
+
+        producto.setSlug(generarNombreUrl(producto.getNombre(), producto.getColor()));
 
         for (GaleriaImagenEntity imagen : producto.getImagenes()) {
             imagen.setProducto(producto);

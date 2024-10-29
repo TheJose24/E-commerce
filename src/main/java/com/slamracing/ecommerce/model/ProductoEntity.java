@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -58,11 +59,12 @@ public class ProductoEntity {
     @LastModifiedDate
     private LocalDateTime fechaActualizacion;
 
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
-    private List<GaleriaImagenEntity> imagenes;
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GaleriaImagenEntity> imagenes = new ArrayList<>();
 
 
     private int numOpiniones;
 
     private double puntuacionPromedio;
+
 }

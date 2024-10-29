@@ -7,15 +7,17 @@ import com.slamracing.ecommerce.service.ProductoService;
 import com.slamracing.ecommerce.service.SubirArchivoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.ArrayList;
 import java.util.List;
 @Slf4j
 @Controller
 @RequestMapping("/api/v1/producto")
-@CrossOrigin(origins = "http://localhost:4200")
 
 public class ProductoController {
 
@@ -25,15 +27,23 @@ public class ProductoController {
     private ProductoService productoService;
 
     @PostMapping("/agregarProducto")
-    public String agregarProducto(ProductoEntity producto, @RequestParam("imagen") MultipartFile[] files) {
+    public String agregarProducto(@ModelAttribute ProductoEntity producto,
+                                  @RequestParam("imagen") MultipartFile[] files) {
         if (producto.getProductoId() == null) {
             List<GaleriaImagenEntity> imagenes = new ArrayList<>();
-            for (MultipartFile file : files) {
-                String nombreImagen = subirArchivoService.guardarImagen(file);
-                GaleriaImagenEntity imagen = new GaleriaImagenEntity();
-                imagen.setUrlImagen(nombreImagen);
-                imagen.setProducto(producto);
-                imagenes.add(imagen);
+            for (int i = 0; i < files.length; i++) {
+                MultipartFile file = files[i];
+                try {
+                    String nombreImagen = subirArchivoService.guardarImagen(file);
+                    GaleriaImagenEntity imagen = new GaleriaImagenEntity();
+                    imagen.setUrlImagen(nombreImagen);
+                    imagen.setProducto(producto);
+                    imagen.setOrden(i);
+                    imagenes.add(imagen);
+                } catch (Exception e) {
+                    log.error("Error al guardar la imagen: {}", e.getMessage());
+                    return "redirect:/admin/productos"; // Redirige en caso de error
+                }
             }
             producto.setImagenes(imagenes);
         }
@@ -42,8 +52,9 @@ public class ProductoController {
         return "redirect:/admin/productos";
     }
 
+
     @PostMapping("/actualizarProducto")
-    public String actualizarProducto(ProductoEntity producto, @RequestParam("imagen") MultipartFile[] files) {
+    public String actualizarProducto(@ModelAttribute ProductoEntity producto, @RequestParam("imagen") MultipartFile[] files) {
         // Busca el producto en la base de datos
         System.out.println("=============================================");
         ProductoEntity productodb = productoService.buscarProductoPorId(producto.getProductoId());
@@ -89,6 +100,7 @@ public class ProductoController {
                     }
                     nuevaImagen.setUrlImagen(nombreImagen);
                     nuevaImagen.setProducto(producto);
+                    nuevaImagen.setOrden(i);
                     nuevasImagenes.add(nuevaImagen);
                     System.out.println("Nueva imagen: " + nuevaImagen);
                 }else {
@@ -119,7 +131,7 @@ public class ProductoController {
         return "redirect:/admin/productos";
     }
 
-    @GetMapping("/eliminarProducto/{id}")
+    @PostMapping("/eliminarProducto/{id}")
     public String eliminarProducto(@PathVariable Long id) {
         ProductoEntity productodb = productoService.buscarProductoPorId(id);
 

@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ResenaRepository extends JpaRepository<ResenaEntity, Long> {
-    List<ResenaEntity> findByProductoId(Long productoId);
+    List<ResenaEntity> findByProductoProductoId(Long productoId);
 }

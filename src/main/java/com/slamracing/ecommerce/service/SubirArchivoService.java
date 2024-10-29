@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 
 @Service
 public class SubirArchivoService {
-    private final String folder = "images//";
+    private final String folder = "productoImages//";
 
     public String guardarImagen(MultipartFile file) {
         if (!file.isEmpty()) {
@@ -29,7 +29,7 @@ public class SubirArchivoService {
     }
 
     public void eliminarImagen(String nombre) {
-        String ruta = "images//";
+        String ruta = folder;
         File file = new File(ruta + nombre);
         file.delete();
     }
