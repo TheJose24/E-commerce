@@ -1,14 +1,12 @@
 spring:
-  thymeleaf:
-    enabled: true
   datasource:
-    url: jdbc:mysql://${DB_URL}/slamracing_dev_db?createDatabaseIfNotExist=true
-    username: ${DB_USER}
-    password: ${DB_PASS}
+    url: jdbc:mysql://localhost:3306/slamracing_db?createDatabaseIfNotExist=true
+    username: root
+    password: j0s33nr1qu3
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
@@ -24,7 +22,3 @@ management:
     web:
       exposure:
         include: '*'
-
-USERNAME_EMAIL: ${EMAIL_USER}
-PASSWORD_EMAIL: ${EMAIL_PASS}
-RECIPIENT_EMAIL: ${EMAIL_RECIPIENT}
