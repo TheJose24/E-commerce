@@ -1,0 +1,88 @@
+
+  
+  /* Estilos para móviles (pantallas pequeñas) */
+  @media (max-width: 576px) {
+    
+    .d-flex {
+      flex-direction: column;
+      margin-left: 2%;
+      margin-right: 2%;
+    }
+    
+    .d-flex p {
+      margin-bottom: 0.5rem;
+    }
+    
+    .w-96 {
+      width: 100%;
+    }
+    
+    .gap-4 {
+      gap: 1rem;
+    }
+  
+    .me-6 {
+      margin-right: 0;
+    }
+  
+    .position-relative {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+  }
+  
+  /* Estilos para tablets (pantallas medianas) */
+  @media (min-width: 577px) and (max-width: 768px) {
+    .d-flex {
+      margin-left: 3%;
+      margin-right: 3%;
+    }
+    
+    .w-96 {
+      width: 100%;
+    }
+    
+    .gap-4 {
+      gap: 1.5rem;
+    }
+  
+    .me-6 {
+      margin-right: 0;
+    }
+    
+    .position-relative {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+  }
+  
+  /* Estilos para pantallas grandes (escritorio) */
+  @media (min-width: 769px) {
+    .d-flex {
+      margin-right: 5%;
+    }
+  
+    .w-96 {
+      width: 96%;
+    }
+  
+    .gap-4 {
+      gap: 2rem;
+    }
+  
+    .me-6 {
+      margin-right: 4%;
+    }
+  
+    .position-relative {
+      width: auto;
+    }
+  }
+  
+  /* Ajustes adicionales para botones */
+  
+  
+  .dropdown-menu {
+    width: 100%;
+  }
+  

@@ -1,0 +1,50 @@
+@media (max-width: 1200px){
+    #descripcionSilla{
+        bottom: 50px !important;
+    }
+
+    #backgroundBlur{
+        width: 125vw !important;
+    }
+
+    #heroTexto div{
+        width: auto !important;
+    }
+
+    #imgHero{
+        width: 75% !important;
+    }
+}
+
+@media (max-width: 576px){
+    #heroTexto p,
+    #heroTexto div a{
+        font-size: 1rem !important;
+    }
+
+    #heroTexto div a{
+        padding: 12px !important;
+    }
+
+    #heroTexto div{
+        width: 100% !important;
+    }
+
+    #descripcionSilla{
+        bottom: 25px !important;
+    }
+
+    #descripcionSilla p{
+        font-size: 1rem !important;
+    }
+
+    #descripcionSilla h3{
+        font-size: 20px !important;
+    }
+
+    #imgHero{
+        width: 100% !important;
+    }
+
+
+}

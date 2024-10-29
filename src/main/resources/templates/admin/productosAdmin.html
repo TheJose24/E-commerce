@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/css/admin/productos/panel.css">
+    <title>Slam Admin | Productos</title>
+</head>
+<body>
+<main class="container-fluid">
+    <div class="row">
+        <div th:insert="~{admin/components/menuLateral.html::sidebar}"></div>
+        <div class="content-area">
+            <div class="products-header">
+                <h1>Productos</h1>
+                <div class="search-bar">
+                    <input type="text" placeholder="Buscar productos...">
+                    <button type="button">Buscar</button>
+                </div>
+            </div>
+            <div class="product-list-area">
+                <table class="product-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Categoría</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Descuento</th>
+                        <th>Precio Total</th>
+                        <th>Stock</th>
+                        <th>Color</th>
+                        <th>Material</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="producto : ${productos}">
+                        <td th:text="${producto.productoId}"></td>
+                        <td th:text="${producto.categoria.nombre}"></td>
+                        <td th:text="${producto.nombre}"></td>
+                        <td th:text="${producto.precio}"></td>
+                        <td th:text="${producto.descuento}"></td>
+                        <td th:text="${producto.precio} - ((${producto.precio} * ${producto.descuento}) /100)"></td>
+                        <td th:text="${producto.stock}"></td>
+                        <td th:text="${producto.color}"></td>
+                        <td th:text="${producto.material}"></td>
+                        <td class="d-flex">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#editarProductoModal"
+                                    th:data-id="${producto.productoId}"
+                                    th:data-nombre="${producto.nombre}"
+                                    th:data-categoria="${producto.categoria.categoriaId}"
+                                    th:data-precio="${producto.precio}"
+                                    th:data-stock="${producto.stock}"
+                                    th:data-descuento="${producto.descuento}"
+                                    th:data-color="${producto.color}"
+                                    th:data-material="${producto.material}"
+                                    th:data-img="${producto.imagenes}">
+                                    Editar
+                            </button>
+
+                            <form style="width: min-content;" th:action="@{/api/v1/producto/eliminarProducto/{productoId}(productoId=${producto.productoId})}" method="POST">
+                                <button class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarProductoModal">
+                Agregar Producto
+            </button>
+
+            <!-- Modal de Agregar Producto -->
+            <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="agregarProductoModalLabel">Agregar Nuevo Producto</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Formulario para crear un nuevo producto -->
+                            <form th:action="@{/api/v1/producto/agregarProducto}" th:object="${producto}" method="post" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label">Nombre del Producto</label>
+                                    <input type="text" class="form-control" id="nombre" th:field="*{nombre}" placeholder="Nombre del Producto" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="categoria" class="form-label">Categoría</label>
+                                    <select class="form-select" id="categoria" th:field="*{categoria}" required>
+                                        <option value="">Selecciona una categoría</option>
+                                        <option th:each="categoria : ${categorias}" th:value="${categoria.categoriaId}" th:text="${categoria.nombre}"></option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="precio" class="form-label">Precio</label>
+                                    <input type="number" class="form-control" id="precio" th:field="*{precio}" placeholder="Precio" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="stock" class="form-label">Stock</label>
+                                    <input type="number" class="form-control" id="stock" th:field="*{stock}" placeholder="Cantidad en Stock" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="color" class="form-label">Color</label>
+                                    <input type="text" class="form-control" id="color" th:field="*{color}" placeholder="Color del Producto">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="material" class="form-label">Material</label>
+                                    <input type="text" class="form-control" id="material" th:field="*{material}" placeholder="Material del Producto">
+                                </div>
+                                <div class="mb-3" id="imagenContainer">
+                                    <label class="form-label">Imágenes</label>
+                                    <input type="file" class="form-control mb-2" name="imagen">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label">Descripción</label>
+                                    <textarea class="form-control" id="descripcion" th:field="*{descripcion}" placeholder="Descripción del Producto" required></textarea>
+                                </div>
+                                <button type="button" class="btn btn-secondary" id="agregarImagen">Agregar Otra Imagen</button>
+                                <button type="submit" class="btn btn-primary">Guardar Producto</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal de Editar Producto -->
+            <div class="modal fade" id="editarProductoModal" tabindex="-1" aria-labelledby="editarProductoModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editarProductoModalLabel">Editar Producto</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/api/v1/producto/actualizarProducto}" method="post" enctype="multipart/form-data" id="formEditarProducto">
+                                <input type="hidden" id="editarProductoId" name="productoId">
+                                <div class="mb-3">
+                                    <label for="editarNombre" class="form-label">Nombre del Producto</label>
+                                    <input type="text" class="form-control" id="editarNombre" name="nombre" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editarCategoria" class="form-label">Categoría</label>
+                                    <select class="form-select" id="editarCategoria" name="categoria" required>
+                                        <option value="">Selecciona una categoría</option>
+                                        <option th:each="categoria : ${categorias}" th:value="${categoria.categoriaId}" th:text="${categoria.nombre}"></option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editarPrecio" class="form-label">Precio</label>
+                                    <input type="number" class="form-control" id="editarPrecio" name="precio" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editarStock" class="form-label">Stock</label>
+                                    <input type="number" class="form-control" id="editarStock" name="stock" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editarDescuento" class="form-label">Descuento (%)</label>
+                                    <input type="number" class="form-control" id="editarDescuento" name="descuento" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editarColor" class="form-label">Color</label>
+                                    <input type="text" class="form-control" id="editarColor" name="color">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editarMaterial" class="form-label">Material</label>
+                                    <input type="text" class="form-control" id="editarMaterial" name="material">
+                                </div>
+
+                                <!-- Mostrar imágenes actuales -->
+                                <div class="mb-3">
+                                    <label for="imagenesActuales" class="form-label">Imágenes actuales</label>
+                                    <div id="imagenesActuales" class="d-flex flex-wrap">
+                                        <!-- Aquí se agregarán las imágenes -->
+                                    </div>
+                                </div>
+
+                                <!-- Campo para subir nuevas imágenes -->
+                                <div class="mb-3">
+                                    <label for="nuevasImagenes" class="form-label">Reemplazar Imágenes</label>
+                                    <input type="file" class="form-control" id="nuevasImagenes" name="imagen" multiple>
+                                    <div class="form-text">Puedes subir varias imágenes a la vez.</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Actualizar Producto</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</main>
+<script>
+    document.getElementById('agregarImagen').addEventListener('click', function() {
+        // Crear un nuevo input de archivo
+        const newInput = document.createElement('input');
+        newInput.type = 'file';
+        newInput.name = 'imagen';
+        newInput.className = 'form-control mb-2';
+
+        // Añadir el nuevo input al contenedor
+        document.getElementById('imagenContainer').appendChild(newInput);
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/admin/productos/edicionProducto.js"></script>
+</body>
+</html>
