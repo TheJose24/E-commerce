@@ -66,7 +66,7 @@
 
         <p style="font-size: 12px; color: #808080; text-align: center;">
             Este email fue enviado a <span th:text="${usuario.email}">[email]</span> porque te suscribiste a nuestro newsletter.<br>
-            Si deseas dejar de recibir nuestros correos, puedes <a th:href="'https://slamracing.devbyjose.studio/api/email/desuscripcion-noticias/' + ${usuario}" style="color: #C5A47E;">cancelar tu suscripción aquí</a>
+            Si deseas dejar de recibir nuestros correos, puedes <a th:href="'https://slamracing.devbyjose.studio/api/email/desuscripcion-noticias/' + ${usuario.email}" style="color: #C5A47E;">cancelar tu suscripción aquí</a>
         </p>
     </div>
 </div>
