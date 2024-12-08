@@ -1,0 +1,56 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 26 oct. 2024, 10:53:29 p. m.
+    Author     : omar1
+*/
+
+
+
+
+.faq-container {
+    max-width: 1000px;
+    margin: auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: left;
+}
+.faq-container h2 {
+    text-align: center;
+}
+.question {
+    font-weight: bold;
+    margin-top: 20px;
+}
+.answer {
+    margin-top: 5px;
+    color: #555;
+}
+
+
+
+
+
+.cont {
+    background-color: #222; /* Fondo gris oscuro para el contenedor del formulario */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    display: flex; /* Añadir esto */
+    justify-content: center; /* Añadir esto para centrar horizontalmente */
+    align-items: center; /* Añadir esto para centrar verticalmente */
+}
+
+.form-control::placeholder {
+    color: #aaa; /* Color del texto del placeholder */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Color del botón al pasar el mouse */
+    border-color: #0056b3; /* Borde del botón al pasar el mouse */
+}
+.formu h2{
+    color: #fff;
+}
