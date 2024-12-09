@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/admin/productos/panel.css" />
+    <title>Slam Admin | Usuarios</title>
+  </head>
+  <body>
+    <main class="container-fluid">
+      <div class="row">
+        <div th:insert="~{admin/components/menuLateral.html::sidebar}"></div>
+        <div class="content-area">
+            <div class="products-header">
+              <h1>Usuarios</h1>
+              <div class="search-bar">
+                <form th:action="@{/admin/usuariosAdmin/buscar}" method="get">
+                  <input type="text" name="termino" placeholder="Buscar usuarios..." />
+                  <button type="submit">Buscar</button>
+                </form>
+              </div>
+            </div>
+            <div class="product-list-area">
+              <table class="product-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Fecha Registro</th>
+                    <th>Última Actualización</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:if="${#lists.isEmpty(usuarios)}">
+                    <td colspan="6" class="text-center">No se encontraron usuarios</td>
+                  </tr>
+      
+                  <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.usuarioId}"></td>
+                    <td th:text="${usuario.nombre}"></td>
+                    <td th:text="${usuario.email}"></td>
+                    <td th:text="${usuario.fechaRegistro}"></td>
+                    <td th:text="${usuario.ultimaActualizacion}"></td>
+                    <td class="d-flex">
+
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editarUsuarioModal"
+                        th:data-id="${usuario.usuarioId}"
+                        th:data-nombre="${usuario.nombre}"
+                        th:data-email="${usuario.email}"
+                      >
+                        Editar
+                      </button>
+
+                      <form style="display: inline-block;"
+                        th:action="@{/admin/usuariosAdmin/eliminarUsuario/{id}(id=${usuario.usuarioId})}"
+                        method="POST">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                      </form>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          
+
+            <div class="modal fade" id="editarUsuarioModal" tabindex="-1" aria-labelledby="editarUsuarioModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="editarUsuarioModalLabel">Editar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form th:action="@{/admin/usuariosAdmin/actualizarUsuario}" method="post" id="formEditarUsuario">
+                      <input type="hidden" id="editarUsuarioId" name="usuarioId" />
+                      <div class="mb-3">
+                        <label for="editarNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="editarNombre" name="nombre" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="editarEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editarEmail" name="email" required />
+                      </div>
+                      <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/admin/productos/edicionProducto.js"></script>
+    <script src="/js/admin/pedidos/busqueda.js"></script>
+  </body>
+</html>
