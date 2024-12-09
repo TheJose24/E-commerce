@@ -3,6 +3,7 @@ package com.slamracing.ecommerce.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.slamracing.ecommerce.dto.UsuarioResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class UsuarioService {
+public class UserService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -44,7 +45,7 @@ public class UsuarioService {
         // Actualizar las propiedades del usuario
         usuarioDb.setNombre(usuario.getNombre() != null ? usuario.getNombre() : usuarioDb.getNombre());
         usuarioDb.setEmail(usuario.getEmail() != null ? usuario.getEmail() : usuarioDb.getEmail());
-        usuarioDb.setContraseña(usuario.getContraseña() != null ? usuario.getContraseña() : usuarioDb.getContraseña());
+        usuarioDb.setContrasena(usuario.getContrasena() != null ? usuario.getContrasena() : usuarioDb.getContrasena());
         usuarioDb.setUltimaActualizacion(LocalDateTime.now());
 
         // Actualizar las direcciones asociadas, si es necesario
@@ -73,5 +74,20 @@ public class UsuarioService {
 
         usuarioRepository.deleteById(id);
         log.info("Usuario eliminado con ID: {}", id);
+    }
+
+    public UsuarioResponse mapToUserResponse(UsuarioEntity userEntity) {
+        if (userEntity == null) {
+            throw new IllegalArgumentException("La entidad de usuario no puede ser nula");
+        }
+
+        return new UsuarioResponse(
+                userEntity.getUsuarioId(),
+                userEntity.getNombre(),
+                userEntity.getEmail(),
+                userEntity.getRole(),
+                userEntity.getFechaRegistro(),
+                userEntity.getUltimaActualizacion()
+        );
     }
 }
