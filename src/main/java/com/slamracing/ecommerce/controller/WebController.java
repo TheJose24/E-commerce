@@ -1,35 +1,48 @@
 package com.slamracing.ecommerce.controller;
 
-import com.slamracing.ecommerce.model.CategoriaEntity;
-import com.slamracing.ecommerce.model.ProductoEntity;
-import com.slamracing.ecommerce.service.CategoriaService;
-import com.slamracing.ecommerce.service.ProductoService;
+import com.slamracing.ecommerce.dto.RegisterRequest;
+import com.slamracing.ecommerce.dto.UsuarioStatsDTO;
+import com.slamracing.ecommerce.model.*;
+import com.slamracing.ecommerce.repository.PagoRepository;
+import com.slamracing.ecommerce.repository.PedidoRepository;
+import com.slamracing.ecommerce.repository.ProductoRepository;
+import com.slamracing.ecommerce.repository.UsuarioRepository;
+import com.slamracing.ecommerce.security.service.SessionManager;
+import com.slamracing.ecommerce.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 public class WebController {
 
+    private final SessionManager sessionManager;
     private final ProductoService productoService;
     private final CategoriaService categoriaService;
-
-    public WebController(ProductoService productoService, CategoriaService categoriaService) {
-        this.productoService = productoService;
-        this.categoriaService = categoriaService;
-    }
+    private final PedidoService pedidoService;
+    private final PagoService pagoService;
+    private final UserService userService;
+    private final UsuarioRepository usuarioRepository;
+    private final PedidoRepository pedidoRepository;
+    private final ProductoRepository productoRepository;
+    private final PagoRepository pagoRepository;
 
     String PAGINA_ACTUAL;
 
@@ -51,12 +64,12 @@ public class WebController {
 
         // Establecer el Locale en la sesión
         session.setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, newLocale);
-        return "redirect:/"+PAGINA_ACTUAL;
+        return "redirect:/" + PAGINA_ACTUAL;
     }
 
     @GetMapping("/")
     public String home(Model model, Locale locale) {
-        PAGINA_ACTUAL="";
+        PAGINA_ACTUAL = "";
         // Mostramos el idioma actual en mayúsculas
         model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
         return "user/index";
@@ -64,7 +77,7 @@ public class WebController {
 
     @GetMapping("/productos")
     public String producto(Model model, Locale locale) {
-        PAGINA_ACTUAL="productos";
+        PAGINA_ACTUAL = "productos";
         // Mostrar el idioma actual en mayúsculas
         model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
         return "user/producto";
@@ -72,7 +85,7 @@ public class WebController {
 
     @GetMapping("/contacto")
     public String contacto(Model model, Locale locale) {
-        PAGINA_ACTUAL="contacto";
+        PAGINA_ACTUAL = "contacto";
         // Mostramos el idioma actual en mayúsculas
         model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
         return "user/contacto";
@@ -80,7 +93,7 @@ public class WebController {
 
     @GetMapping("sobre_nosotros")
     public String sobre_nosotros(Model model, Locale locale) {
-        PAGINA_ACTUAL="sobre_nosotros";
+        PAGINA_ACTUAL = "sobre_nosotros";
         // Mostramos el idioma actual en mayúsculas
         model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
         return "user/sobre_nosotros";
@@ -88,15 +101,58 @@ public class WebController {
 
     // Manejamos el envío del formulario de contacto
     @PostMapping("/formularioContacto")
-    public String enviarFormularioContacto(@RequestParam String nombre,@RequestParam  String correo, @RequestParam String mensaje) {
-        System.out.println("nombre :"+ nombre + ", correo :"+ correo + ", mensaje :"+ mensaje);
+    public String enviarFormularioContacto(@RequestParam String nombre, @RequestParam String correo, @RequestParam String mensaje) {
+        System.out.println("nombre :" + nombre + ", correo :" + correo + ", mensaje :" + mensaje);
 
         return "redirect:/contacto";
     }
 
+
+    @GetMapping("/soporte")
+    public String soporte(Model model, Locale locale) {
+        PAGINA_ACTUAL = "soporte";
+        // Mostramos el idioma actual en mayúsculas
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+        return "user/soporte";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model, Locale locale) {
+        PAGINA_ACTUAL = "login";
+        // Mostramos el idioma actual en mayúsculas
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+        return "login";
+    }
+
+    @GetMapping("/registro")
+    public String registro(Model model, Locale locale) {
+        PAGINA_ACTUAL = "registro";
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+        model.addAttribute("registerRequest", new RegisterRequest());
+        return "registro";
+    }
+
+    @GetMapping("/401")
+    public String unauthorized(Model model, Locale locale) {
+        PAGINA_ACTUAL = "401";
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+        return "401";
+    }
+
     @GetMapping("/admin/productos")
     public String adminProductos(Model model, Locale locale) {
+        String token = sessionManager.getCurrentToken();
+
+        if (token == null) {
+            return "redirect:/login";
+        }
+
+        if (!sessionManager.hasRole("ADMIN")) {
+            return "redirect:/401";
+        }
+
         PAGINA_ACTUAL = "admin/productos";
+
         model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
 
         // Obtenemos la lista de productos desde el servicio
@@ -111,12 +167,202 @@ public class WebController {
         return "admin/productosAdmin";
     }
 
-    @GetMapping("/soporte")
-    public String soporte(Model model, Locale locale) {
-        PAGINA_ACTUAL="soporte";
-        // Mostramos el idioma actual en mayúsculas
-        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
-        return "user/soporte";
+
+    @GetMapping("/admin/pedidosAdmin")
+    public String listarPedidos(Model model) {
+        String token = sessionManager.getCurrentToken();
+
+        if (token == null) {
+            return "redirect:/login";
+        }
+
+        if (!sessionManager.hasRole("ADMIN")) {
+            return "redirect:/401";
+        }
+        List<PedidoEntity> pedidos = pedidoService.listarPedidos();
+        model.addAttribute("pedidos", pedidos);
+        return "admin/pedidosAdmin";
     }
 
+    @GetMapping("/admin/pedidosAdmin/buscar")
+    public String buscarPedidos(@RequestParam String query, Model model) {
+        String token = sessionManager.getCurrentToken();
+
+        if (token == null) {
+            return "redirect:/login";
+        }
+
+        if (!sessionManager.hasRole("ADMIN")) {
+            return "redirect:/401";
+        }
+        List<PedidoEntity> pedidos = pedidoService.buscarPedidos(query);
+        model.addAttribute("pedidos", pedidos);
+        return "admin/pedidosAdmin";
+
+    }
+
+    @GetMapping("/admin/pagosAdmin")
+    public String listarPagos(@RequestParam(value = "query", required = false) String query, Model model) {
+        String token = sessionManager.getCurrentToken();
+
+        if (token == null) {
+            return "redirect:/login";
+        }
+
+        if (!sessionManager.hasRole("ADMIN")) {
+            return "redirect:/401";
+        }
+
+        List<PagoEntity> pagos;
+        if (query != null && !query.isEmpty()) {
+            pagos = pagoService.buscarPagos(query);
+        } else {
+            pagos = pagoService.listarPagos();
+        }
+
+        // Si no se encontraron pagos, agregar el mensaje al modelo
+        if (pagos.isEmpty()) {
+            model.addAttribute("mensaje", "No se encontraron pagos para la búsqueda: " + query);
+        }
+
+        model.addAttribute("pagos", pagos);
+        model.addAttribute("query", query); // Mantener el valor de la búsqueda en el campo del formulario
+        return "admin/pagosAdmin";
+    }
+
+    @GetMapping("/admin/usuariosAdmin")
+    public String listarUsuarios(Model model) {
+        String token = sessionManager.getCurrentToken();
+
+        if (token == null) {
+            return "redirect:/login";
+        }
+
+        if (!sessionManager.hasRole("ADMIN")) {
+            return "redirect:/401";
+        }
+        List<UsuarioEntity> usuarios = userService.listarUsuarios();
+        model.addAttribute("usuarios", usuarios);
+        return "admin/usuariosAdmin";
+    }
+
+    @GetMapping("/admin/usuariosAdmin/buscar")
+    public String buscarUsuarios(@RequestParam("termino") String termino, Model model) {
+        String token = sessionManager.getCurrentToken();
+
+        if (token == null) {
+            return "redirect:/login";
+        }
+
+        if (!sessionManager.hasRole("ADMIN")) {
+            return "redirect:/401";
+        }
+
+        List<UsuarioEntity> usuarios = userService.buscarUsuarios(termino);
+        model.addAttribute("usuarios", usuarios);
+        return "admin/usuariosAdmin";
+    }
+
+    @PostMapping("/admin/usuariosAdmin/actualizarUsuario")
+    public String actualizarUsuario(@ModelAttribute UsuarioEntity usuario) {
+        String token = sessionManager.getCurrentToken();
+
+        if (token == null) {
+            return "redirect:/login";
+        }
+
+        if (!sessionManager.hasRole("ADMIN")) {
+            return "redirect:/401";
+        }
+
+        try {
+            userService.actualizarUsuario(usuario);
+            log.info("Usuario actualizado: {}", usuario);
+        } catch (Exception e) {
+            log.error("Error al actualizar el usuario: {}", e.getMessage());
+        }
+        return "redirect:/admin/usuariosAdmin";
+    }
+
+    @PostMapping("/admin/usuariosAdmin/eliminarUsuario/{id}")
+    public String eliminarUsuario(@PathVariable Long id) {
+        String token = sessionManager.getCurrentToken();
+
+        if (token == null) {
+            return "redirect:/login";
+        }
+
+        if (!sessionManager.hasRole("ADMIN")) {
+            return "redirect:/401";
+        }
+
+        try {
+            userService.eliminarUsuario(id);
+            log.info("Usuario eliminado con ID: {}", id);
+        } catch (Exception e) {
+            log.error("Error al eliminar el usuario con ID: {}", id, e);
+        }
+        return "redirect:/admin/usuariosAdmin";
+    }
+
+    @GetMapping("/admin/inicio")
+    public String inicio(Model model) {
+        String token = sessionManager.getCurrentToken();
+
+        if (token == null) {
+            return "redirect:/login";
+        }
+
+        if (!sessionManager.hasRole("ADMIN")) {
+            return "redirect:/401";
+        }
+
+        // Obtener datos para el gráfico de pedidos por mes
+        Map<String, Long> pedidosPorMes = pedidoRepository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        pedido -> pedido.getFechaPedido().getMonth().getDisplayName(TextStyle.FULL, new Locale("es")),
+                        Collectors.counting()
+                ));
+
+        // Obtener datos para el gráfico de productos por categoría
+        Map<String, Long> productosPorCategoria = productoRepository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        producto -> producto.getCategoria().getNombre(),
+                        Collectors.counting()
+                ));
+
+        // Obtener estadísticas de usuarios utilizando pedidoRepository
+        List<UsuarioStatsDTO> usuariosStats = usuarioRepository.findAll().stream()
+                .map(usuario -> {
+                    UsuarioStatsDTO stats = new UsuarioStatsDTO();
+                    stats.setId(usuario.getUsuarioId());
+                    // Contar pedidos para cada usuario usando pedidoRepository
+                    Long cantidadPedidos = pedidoRepository.countByUsuario(usuario);
+                    stats.setCantidadPedidos(cantidadPedidos);
+                    return stats;
+                })
+                .collect(Collectors.toList());
+
+        model.addAttribute("pedidosPorMes", pedidosPorMes);
+        model.addAttribute("productosPorCategoria", productosPorCategoria);
+        model.addAttribute("usuariosStats", usuariosStats);
+
+        return "admin/Inicio";
+    }
+
+    @GetMapping("/api/auth/logout")
+    public String logout(HttpSession session) {
+        try {
+            // Limpiar sessionManager
+            sessionManager.clearSession();
+
+            // Limpiar sesión HTTP
+            session.invalidate();
+
+            return "redirect:/login";
+        } catch (Exception e) {
+            log.error("Error durante el logout: ", e);
+            return "redirect:/error";
+        }
+    }
 }

@@ -10,6 +10,6 @@ import com.slamracing.ecommerce.model.UsuarioEntity;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
-    
+    Optional<UsuarioEntity> findByEmail(String email);
     List<UsuarioEntity> findByNombreContainingIgnoreCaseOrEmailContainingIgnoreCase(String nombre, String email);
 }

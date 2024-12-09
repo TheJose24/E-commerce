@@ -28,3 +28,17 @@ management:
 USERNAME_EMAIL: ${EMAIL_USER}
 PASSWORD_EMAIL: ${EMAIL_PASS}
 RECIPIENT_EMAIL: ${EMAIL_RECIPIENT}
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET}
+      expiration: 21600000 # 6 horas
+      refresh-token:
+        expiration: 1209600000 # 14 días
+      issuer: SlamRacing
+
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true

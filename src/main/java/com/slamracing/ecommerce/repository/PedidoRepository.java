@@ -4,6 +4,7 @@ import com.slamracing.ecommerce.model.PedidoEntity;
 
 import java.util.List;
 
+import com.slamracing.ecommerce.model.UsuarioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,4 +14,6 @@ public interface PedidoRepository extends JpaRepository<PedidoEntity, Long> {
            "LOWER(p.usuario.nombre) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "CAST(p.pedidoId AS string) LIKE CONCAT('%', :query, '%')")
     List<PedidoEntity> buscarPorCriterio(@Param("query") String query);
+
+    Long countByUsuario(UsuarioEntity usuario);
 }

@@ -1,24 +1,30 @@
 package com.slamracing.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.slamracing.ecommerce.model.enums.EstadoUsuario;
+import com.slamracing.ecommerce.model.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "usuarios")
 @Data
+@ToString(exclude = {"tokens", "direcciones"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class UsuarioEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "usuario_id")
@@ -30,9 +36,16 @@ public class UsuarioEntity {
     private String email;
 
     @Column(nullable = false)
-    private String contraseña;
+    private String contrasena;
 
-    @Column(name = "fecha_registro", updatable = false, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonManagedReference("usuario-tokens")
+    private List<TokenEntity> tokens;
+
+    @Column(name = "fecha_registro", updatable = false)
     @CreatedDate
     private LocalDateTime fechaRegistro;
 
@@ -43,10 +56,14 @@ public class UsuarioEntity {
     @Column(name = "token_recuperacion")
     private String tokenRecuperacion;
 
-    @Column(name = "fecha_expiracion_token")
-    private LocalDateTime fechaExpiracionToken;
-
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DireccionEntity> direcciones;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_usuario")
+    private EstadoUsuario estadoUsuario;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<PedidoEntity> pedidos;
 
 }

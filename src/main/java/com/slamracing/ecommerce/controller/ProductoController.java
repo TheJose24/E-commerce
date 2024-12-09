@@ -3,8 +3,10 @@ package com.slamracing.ecommerce.controller;
 import com.slamracing.ecommerce.model.GaleriaImagenEntity;
 import com.slamracing.ecommerce.model.ProductoEntity;
 import com.slamracing.ecommerce.repository.GaleriaImagenRepository;
+import com.slamracing.ecommerce.security.service.SessionManager;
 import com.slamracing.ecommerce.service.ProductoService;
 import com.slamracing.ecommerce.service.SubirArchivoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +20,21 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequestMapping("/api/v1/producto")
-
+@RequiredArgsConstructor
 public class ProductoController {
 
-    @Autowired
-    private SubirArchivoService subirArchivoService;
-    @Autowired
-    private ProductoService productoService;
+    private final SubirArchivoService subirArchivoService;
+    private final ProductoService productoService;
+    private final SessionManager sessionManager;
 
     @PostMapping("/agregarProducto")
     public String agregarProducto(@ModelAttribute ProductoEntity producto,
-                                  @RequestParam("imagen") MultipartFile[] files) {
+                                  @RequestParam("imagen") MultipartFile[] files,
+                                  @RequestParam("_token" ) String token) {
+        if (!sessionManager.isValidToken(token)) {
+            return "redirect:/login";
+        }
+
         if (producto.getProductoId() == null) {
             List<GaleriaImagenEntity> imagenes = new ArrayList<>();
             for (int i = 0; i < files.length; i++) {
@@ -55,7 +61,11 @@ public class ProductoController {
 
     @PostMapping("/actualizarProducto")
     public String actualizarProducto(@ModelAttribute ProductoEntity producto,
-                                     @RequestParam("imagen") MultipartFile[] files) {
+                                     @RequestParam("imagen") MultipartFile[] files,
+                                     @RequestParam("_token" ) String token) {
+        if (!sessionManager.isValidToken(token)) {
+            return "redirect:/login";
+        }
         // Busca el producto en la base de datos
         System.out.println("=============================================");
         ProductoEntity productodb = productoService.buscarProductoPorId(producto.getProductoId());
@@ -133,7 +143,10 @@ public class ProductoController {
     }
 
     @PostMapping("/eliminarProducto/{id}")
-    public String eliminarProducto(@PathVariable Long id) {
+    public String eliminarProducto(@PathVariable Long id, @RequestParam("_token" ) String token) {
+        if (!sessionManager.isValidToken(token)) {
+            return "redirect:/login";
+        }
         ProductoEntity productodb = productoService.buscarProductoPorId(id);
 
         List<GaleriaImagenEntity> imagenes = productodb.getImagenes();

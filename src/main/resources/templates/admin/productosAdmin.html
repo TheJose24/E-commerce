@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/css/admin/productos/panel.css">
     <title>Slam Admin | Productos</title>
+    <script src="/js/authInterceptor.js"></script>
 </head>
 <body>
 <main class="container-fluid">
@@ -62,10 +63,11 @@
                                     th:data-color="${producto.color}"
                                     th:data-material="${producto.material}"
                                     th:data-img="${producto.imagenes}">
-                                    Editar
+                                Editar
                             </button>
 
                             <form style="width: min-content;" th:action="@{/api/v1/producto/eliminarProducto/{productoId}(productoId=${producto.productoId})}" method="POST">
+                                <input type="hidden" name="_token" th:value="${session.jwt_token}">
                                 <button class="btn btn-danger">Eliminar</button>
                             </form>
                         </td>
@@ -76,6 +78,81 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarProductoModal">
                 Agregar Producto
             </button>
+
+            <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#gestionCategoriasModal">
+                Gestionar Categorías
+            </button>
+
+            <!-- Modal de Gestión de Categorías -->
+            <div class="modal fade" id="gestionCategoriasModal" tabindex="-1" aria-labelledby="gestionCategoriasModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="gestionCategoriasModalLabel">Gestión de Categorías</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Formulario para agregar categoría -->
+                            <form id="agregarCategoriaForm" th:action="@{/api/v1/categoria/agregarCategoria}" method="post">
+                                <input type="hidden" name="_token" th:value="${session.jwt_token}">
+                                <div class="mb-3">
+                                    <label for="nombreCategoria" class="form-label">Nueva Categoría</label>
+                                    <input type="text" class="form-control" id="nombreCategoria" name="nombre" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Agregar Categoría</button>
+                            </form>
+
+                            <hr class="my-4">
+
+                            <!-- Lista de categorías existentes -->
+                            <h6>Categorías Existentes</h6>
+                            <div class="list-group">
+                                <div th:each="categoria : ${categorias}" class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span th:text="${categoria.nombre}"></span>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary editar-categoria"
+                                                th:data-id="${categoria.categoriaId}"
+                                                th:data-nombre="${categoria.nombre}">
+                                            Editar
+                                        </button>
+                                        <form th:action="@{/api/v1/categoria/eliminarCategoria/{id}(id=${categoria.categoriaId})}"
+                                              method="POST" style="display: inline;">
+                                            <input type="hidden" name="_token" th:value="${session.jwt_token}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger ms-1"
+                                                    onclick="return confirm('¿Estás seguro de eliminar esta categoría?')">
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de Edición de Categoría -->
+            <div class="modal fade" id="editarCategoriaModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Editar Categoría</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editarCategoriaForm" th:action="@{/api/v1/categoria/actualizarCategoria}" method="post">
+                                <input type="hidden" name="_token" th:value="${session.jwt_token}">
+                                <input type="hidden" id="editarCategoriaId" name="categoriaId">
+                                <div class="mb-3">
+                                    <label for="editarNombreCategoria" class="form-label">Nombre de la Categoría</label>
+                                    <input type="text" class="form-control" id="editarNombreCategoria" name="nombre" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Modal de Agregar Producto -->
             <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
@@ -88,6 +165,7 @@
                         <div class="modal-body">
                             <!-- Formulario para crear un nuevo producto -->
                             <form th:action="@{/api/v1/producto/agregarProducto}" th:object="${producto}" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="_token" th:value="${session.jwt_token}">
                                 <div class="mb-3">
                                     <label for="nombre" class="form-label">Nombre del Producto</label>
                                     <input type="text" class="form-control" id="nombre" th:field="*{nombre}" placeholder="Nombre del Producto" required>
@@ -143,6 +221,7 @@
                         <div class="modal-body">
                             <form th:action="@{/api/v1/producto/actualizarProducto}" method="post" enctype="multipart/form-data" id="formEditarProducto">
                                 <input type="hidden" id="editarProductoId" name="productoId">
+                                <input type="hidden" name="_token" th:value="${session.jwt_token}">
                                 <div class="mb-3">
                                     <label for="editarNombre" class="form-label">Nombre del Producto</label>
                                     <input type="text" class="form-control" id="editarNombre" name="nombre" required>
@@ -228,5 +307,6 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/js/admin/productos/edicionProducto.js"></script>
+<script src="/js/admin/productos/gestionCategorias.js"></script>
 </body>
 </html>
