@@ -111,6 +111,12 @@ public class WebController {
         return "admin/productosAdmin";
     }
 
-
+    @GetMapping("/soporte")
+    public String soporte(Model model, Locale locale) {
+        PAGINA_ACTUAL="soporte";
+        // Mostramos el idioma actual en mayúsculas
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+        return "user/soporte";
+    }
 
 }
