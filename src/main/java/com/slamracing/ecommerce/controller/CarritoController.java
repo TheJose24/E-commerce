@@ -2,6 +2,8 @@ package com.slamracing.ecommerce.controller;
 
 import com.slamracing.ecommerce.service.CarritoService;
 import com.slamracing.ecommerce.dto.CarritoRequest;
+import com.slamracing.ecommerce.model.PedidoEntity;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

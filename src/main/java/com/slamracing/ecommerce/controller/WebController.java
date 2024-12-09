@@ -1,18 +1,35 @@
 package com.slamracing.ecommerce.controller;
 
+import com.slamracing.ecommerce.model.CategoriaEntity;
+import com.slamracing.ecommerce.model.ProductoEntity;
+import com.slamracing.ecommerce.service.CategoriaService;
+import com.slamracing.ecommerce.service.ProductoService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Locale;
 
 @Controller
 public class WebController {
+
+    private final ProductoService productoService;
+    private final CategoriaService categoriaService;
+
+    public WebController(ProductoService productoService, CategoriaService categoriaService) {
+        this.productoService = productoService;
+        this.categoriaService = categoriaService;
+    }
 
     String PAGINA_ACTUAL;
 
@@ -61,14 +78,45 @@ public class WebController {
         return "user/contacto";
     }
 
+    @GetMapping("sobre_nosotros")
+    public String sobre_nosotros(Model model, Locale locale) {
+        PAGINA_ACTUAL="sobre_nosotros";
+        // Mostramos el idioma actual en mayúsculas
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+        return "user/sobre_nosotros";
+    }
+
     // Manejamos el envío del formulario de contacto
     @PostMapping("/formularioContacto")
     public String enviarFormularioContacto(@RequestParam String nombre,@RequestParam  String correo, @RequestParam String mensaje) {
         System.out.println("nombre :"+ nombre + ", correo :"+ correo + ", mensaje :"+ mensaje);
 
-        return "redirect:/contacto"; // Retorna a la vista de contacto
+        return "redirect:/contacto";
     }
 
+    @GetMapping("/admin/productos")
+    public String adminProductos(Model model, Locale locale) {
+        PAGINA_ACTUAL = "admin/productos";
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
 
+        // Obtenemos la lista de productos desde el servicio
+        List<ProductoEntity> productos = productoService.listarProductos();
+        model.addAttribute("productos", productos);
+
+        model.addAttribute("producto", new ProductoEntity());
+
+        List<CategoriaEntity> categorias = categoriaService.listarCategorias();
+
+        model.addAttribute("categorias", categorias);
+        return "admin/productosAdmin";
+    }
+
+    @GetMapping("/soporte")
+    public String soporte(Model model, Locale locale) {
+        PAGINA_ACTUAL="soporte";
+        // Mostramos el idioma actual en mayúsculas
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+        return "user/soporte";
+    }
 
 }

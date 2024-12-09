@@ -39,7 +39,7 @@ public class EmailController {
         }
     }
 
-    @PutMapping("/desuscripcion-noticias/{email}")
+    @GetMapping("/desuscripcion-noticias/{email}")
     public ResponseEntity<String> desuscripcion(@PathVariable String email) {
         log.info("Solicitando desuscripción a noticias para el email: {}", email);
 
