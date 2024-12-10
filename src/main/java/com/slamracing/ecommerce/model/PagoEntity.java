@@ -35,9 +35,8 @@ public class PagoEntity {
     @Column(name = "metodo_pago", nullable = false)
     private MetodoPago metodoPago;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "estado_transaccion", nullable = false)
-    private EstadoTransaccion estadoTransaccion;
+    private String estadoTransaccion;
 
     @Column(name = "fecha_pago", updatable = false)
     @CreatedDate
@@ -47,5 +46,11 @@ public class PagoEntity {
     private String idTransaccionServicio;
 
     @Column(nullable = false)
-    private BigDecimal monto;
+    private BigDecimal montoNeto;
+
+    private BigDecimal comision_mp;
+
+    private BigDecimal monto_recibido;
+
+
 }

@@ -14,7 +14,7 @@ public interface PagoRepository extends JpaRepository<PagoEntity, Long> {
     @Query("SELECT p FROM PagoEntity p WHERE " +
             "CAST(p.pedido.pedidoId AS string) LIKE :query OR " +
             "p.idTransaccionServicio LIKE :query OR " +
-            "CAST(p.monto AS string) LIKE :query")
+            "CAST(p.montoNeto AS string) LIKE :query")
     List<PagoEntity> buscarPorCriterio(@Param("query") String query);
 
     @Query("SELECT p FROM PagoEntity p WHERE p.estadoTransaccion = :estado")

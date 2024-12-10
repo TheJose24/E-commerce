@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
   thymeleaf:
     enabled: true
   datasource:
@@ -28,6 +32,8 @@ management:
 USERNAME_EMAIL: ${EMAIL_USER}
 PASSWORD_EMAIL: ${EMAIL_PASS}
 RECIPIENT_EMAIL: ${EMAIL_RECIPIENT}
+
+mercado_pago_token: ${PUBLIC_KEY_MP}
 
 application:
   security:
