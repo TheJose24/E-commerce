@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SLAM RACING</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/hoverNavElements.css">
+    <link rel="stylesheet" href="/css/carritoStyle.css">
+    <link rel="stylesheet" href="/css/responsiveHeader.css">
+    <link rel="stylesheet" href="/css/scrollbar.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
+    <link rel="icon" href="/images/favicon.ico"/>
+
+</head>
+<body>
+
+    <header th:replace="~{user/components/header.html::header}"></header>
+
+<main class="container py-4 font-poppins">
+
+    <div class="d-flex text-muted text-sm font-medium mb-3 gap-1">
+        <p>Productos /</p>
+        <a class="text-dark" th:href="@{/productos}">Sillas Gamer /</a>
+        <p th:text="${producto.nombre} + ' ' + ${producto.color}" class="text-dark"></p>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-between">
+
+        <div id="modal"
+             class="d-none fixed-top d-flex align-items-center justify-content-center w-100 h-100 bg-dark bg-opacity-50">
+            <div class="position-relative d-flex w-75 justify-content-center align-items-center">
+                <button id="anterior" class="border-0 text-white fs-3 cursor-pointer position-absolute start-0">
+                    &#10094;
+                </button>
+                <div class="w-75 d-flex justify-content-center border border-secondary rounded shadow-lg bg-white overflow-hidden">
+                    <img th:each="imagen, iterStat : ${producto.imagenes}"
+                         th:if="${iterStat.index > 4}"
+                         th:src="@{/productoImages/{img} (img=${imagen.urlImagen})}"
+                         th:alt="${producto.nombre}"
+                         class="galeria-imagenes-modal img-fluid"
+                    >
+                </div>
+
+                <button id="siguiente" class="border-0 text-white fs-3 cursor-pointer position-absolute end-0">
+                    &#10095;
+                </button>
+            </div>
+            <button id="cerrar-modal" class="position-absolute text-white top-0 end-0">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="col-md-7">
+            <div class="d-flex flex-column align-items-center">
+
+                <div class="position-relative w-100 mb-3 border border-secondary rounded">
+                    <div class="position-absolute w-100">
+                        <p th:classappend="${producto.descuento > 0} ? 'opacity-100' : ''" th:text="${producto.descuento + '% Descuento' }"
+                           class="opacity-0 bg-dark px-2 py-1 text-white font-medium"></p>
+                    </div>
+
+                    <div class="d-flex align-items-center overflow-hidden" id="imagen-principal">
+                        <img th:src="@{/productoImages/{img} (img=${producto.imagenes[1].urlImagen})}" th:alt="${producto.nombre}"
+                             class="imagenProducto w-70 mx-auto ratio ratio-1x1 img-fluid">
+                        <img th:src="@{/productoImages/{img} (img=${producto.imagenes[2].urlImagen})}" th:alt="${producto.nombre}"
+                             class="imagenProducto w-70 mx-auto ratio ratio-1x1 img-fluid">
+                        <img th:src="@{/productoImages/{img} (img=${producto.imagenes[3].urlImagen})}" th:alt="${producto.nombre}"
+                             class="imagenProducto w-70 mx-auto ratio ratio-1x1 img-fluid">
+                        <img th:src="@{/productoImages/{img} (img=${producto.imagenes[4].urlImagen})}" th:alt="${producto.nombre}"
+                             class="imagenProducto w-70 mx-auto ratio ratio-1x1 img-fluid">
+
+                        <img th:src="@{/productoImages/{img} (img=${producto.imagenes[3].urlImagen})}" th:alt="${producto.nombre}"
+                             class="imagenProducto w-70 mx-auto ratio ratio-1x1 img-fluid -scale-x-100">
+                        <img th:src="@{/productoImages/{img} (img=${producto.imagenes[2].urlImagen})}" th:alt="${producto.nombre}"
+                             class="imagenProducto w-70 mx-auto ratio ratio-1x1 img-fluid -scale-x-100">
+                        <img th:src="@{/productoImages/{img} (img=${producto.imagenes[1].urlImagen})}" th:alt="${producto.nombre}"
+                             class="imagenProducto w-70 mx-auto ratio ratio-1x1 img-fluid -scale-x-100">
+                    </div>
+
+                    <div class="position-absolute end-0 bottom-0">
+                        <svg class="svg-360swipe" width="60" height="27" viewBox="0 0 65 27" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.9274 7.94495H22.7954C24.0038 7.94495 24.5995 8.55766 24.5995 9.59586C24.5995 10.4638 24.0208 11.1446 23.0677 11.1446C22.0125 11.1446 21.4509 10.6 21.3317 9.85115H19.2383C19.3234 11.7573 20.736 13.1529 23.2209 13.1529C25.6377 13.1529 26.9652 11.6212 26.9652 9.71499C26.9652 8.31938 26.1993 7.40032 25.1952 6.90675C25.9781 6.48125 26.795 5.66431 26.795 4.33677C26.795 2.58374 25.2292 1.10303 23.0847 1.10303C21.0594 1.10303 19.4766 2.41355 19.3915 4.33677H21.5019C21.604 3.60493 22.1316 3.07732 22.9656 3.07732C23.8336 3.07732 24.4293 3.65599 24.4293 4.43889C24.4293 5.42603 23.7655 5.93662 22.7954 5.93662H21.9274V7.94495Z" fill="#CED4DA"></path><path d="M34.4558 1.25635H31.9028L29.5371 6.03888C28.8733 7.38344 28.4648 8.4727 28.4648 9.39176C28.4648 11.9958 30.2349 13.1531 32.4304 13.1531C34.6089 13.1531 36.362 11.9788 36.362 9.37474C36.362 7.3494 34.9493 5.86868 33.1452 5.86868C32.7198 5.86868 32.3623 5.91974 32.0049 6.08994L34.4558 1.25635ZM30.8476 9.47686C30.8476 8.50674 31.3752 7.82595 32.4304 7.82595C33.4516 7.82595 33.9792 8.50674 33.9792 9.47686C33.9792 10.464 33.4516 11.1448 32.4304 11.1448C31.3752 11.1448 30.8476 10.464 30.8476 9.47686Z" fill="#CED4DA"></path><path d="M45.5535 4.83034C45.5535 2.09017 43.7153 1.10303 41.6049 1.10303C39.4945 1.10303 37.6562 2.09017 37.6562 4.84736V9.40864C37.6562 12.0467 39.4945 13.1529 41.6049 13.1529C43.7153 13.1529 45.5535 12.0467 45.5535 9.40864V4.83034ZM43.1707 5.0516V9.2044C43.1707 10.4638 42.6601 11.1446 41.6049 11.1446C40.5327 11.1446 40.022 10.4638 40.022 9.2044V5.0516C40.022 3.79214 40.5327 3.11136 41.6049 3.11136C42.6601 3.11136 43.1707 3.79214 43.1707 5.0516Z" fill="#CED4DA"></path><path d="M46.4219 3.48572C46.4219 4.84729 47.4942 5.8855 48.8217 5.8855C50.1492 5.8855 51.2215 4.84729 51.2215 3.48572C51.2215 2.12414 50.1492 1.08594 48.8217 1.08594C47.4942 1.08594 46.4219 2.12414 46.4219 3.48572ZM47.9367 3.48572C47.9367 2.99215 48.3281 2.60069 48.8217 2.60069C49.3153 2.60069 49.6727 2.99215 49.6727 3.48572C49.6727 3.99631 49.3153 4.38776 48.8217 4.38776C48.3281 4.38776 47.9367 3.99631 47.9367 3.48572Z" fill="#CED4DA"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M57.5459 11.6341L51.9309 7.47264L58.7641 6.89355C58.7641 6.89355 58.1808 7.5761 57.5459 8.47592C74.1678 13.9198 56.476 24.3564 34.5493 24.3564L38.8314 21.2703L34.5493 18.3377C53.7425 18.3377 60.2352 15.9833 61.0805 13.9198C61.9258 11.8562 60.8713 10.6791 57.3704 9.58214L57.5459 11.6341ZM2.58893 12.8334C0.309886 18.7382 22.7823 19.0084 28.2354 19.0084L27.3521 16.8588L34.1845 21.2703L27.3521 26.2485L28.2354 23.5839C22.2475 23.5839 0.106122 22.564 0.974042 13.6363C1.4757 8.47592 16.133 6.71535 16.2972 7.20607C16.4615 7.6968 4.02847 9.10367 2.58893 12.8334Z" fill="#CED4DA"></path></svg>
+                    </div>
+                </div>
+
+                <div class="position-relative w-100">
+                    <div class="position-relative w-100 overflow-hidden">
+                        <div id="carrucel-imagenes" class="d-flex transition-transform">
+                            <img th:each="imagen, iterStat : ${producto.imagenes}"
+                                 th:if="${iterStat.index > 4}"
+                                 th:src="@{/productoImages/{img} (img=${imagen.urlImagen})}"
+                                 th:alt="${producto.nombre}"
+                                 class="carrucelItem w-14 me-2 cursor-pointer hover-opacity-60 transition-opacity ratio ratio-1x1 img-fluid border border-secondary">
+                        </div>
+
+                        <button id="prev-btn"
+                                class="d-none position-absolute top-50 start-0 translate-middle-y w-2 h-100 bg-dark bg-opacity-50 hover-bg-opacity-75 text-white border-0 cursor-pointer">
+                            &#10094;
+                        </button>
+
+                        <button id="next-btn"
+                                class="position-absolute top-50 end-0 translate-middle-y w-2 h-100 bg-dark bg-opacity-50 hover-bg-opacity-75 text-white border-0 cursor-pointer">
+                            &#10095;
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <h2 th:text="${producto.nombre.toUpperCase()}" class="h4 font-weight-medium text-muted"></h2>
+            <h2 th:text="${producto.color.toUpperCase()}" class="h2 font-weight-bold mb-3"></h2>
+
+            <p th:text="${producto.descripcion}" class="mb-3"></p>
+
+            <div class="d-inline-flex align-items-center mb-3">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 0L9.79611 5.52786H15.6085L10.9062 8.94427L12.7023 14.4721L8 11.0557L3.29772 14.4721L5.09383 8.94427L0.391548 5.52786H6.20389L8 0Z" fill="black"/>
+                </svg>
+                <p th:text="${#numbers.formatDecimal(producto.puntuacionPromedio, 0, 'COMMA', 1, 'POINT')}" class="ms-1"></p>
+                <p th:text="'(' + ${producto.numOpiniones} + ' opiniones)'" class="ms-1 text-sm text-muted"></p>
+            </div>
+
+            <div class="d-flex align-items-end mb-3 font-medium">
+                <h3 th:text="'S/. ' + ${producto.precio - (producto.precio * producto.descuento / 100)}"
+                    class="h3 text-danger"></h3>
+                <h3 class="ms-3">
+                    <s th:if="${producto.descuento > 0}" th:text="${'S/. ' + producto.precio}"
+                       class="text-muted text-decoration-line-through"></s>
+                </h3>
+            </div>
+
+            <div class="mb-3">
+                <div class="d-flex align-items-end mb-3">
+                    <h3 class="h5 font-weight-bold">Color :</h3>
+                    <p th:text="${producto.color}" class="ms-1"></p>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <img th:each="productoConNombre : ${productosPorNombre}" th:src="@{/productoImages/{img} (img=${productoConNombre.imagenes[0].urlImagen})}" th:alt="${productoConNombre.nombre}"
+                         class="w-20 ratio ratio-1x1 img-fluid border border-2 border-dark">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="d-flex align-items-end mb-3">
+                    <h3 class="h5 font-weight-bold">Tapicería :</h3>
+                    <p th:text="${producto.material}" class="ms-1"></p>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <div th:each="materialPorNombre : ${productosPorNombre}"
+                         class="d-flex flex-column align-items-center w-25">
+                        <img th:src="@{/productoImages/material/{imgMaterial} (imgMaterial=${materialPorNombre.material + '.png'}) }" th:alt="${materialPorNombre.material}"
+                             class="w-100 img-fluid border border-2 border-dark">
+                        <h4 th:text="${materialPorNombre.material}"></h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center mb-3">
+                <div th:classappend="${producto.stock > 0} ? 'bg-success' : 'bg-warning'" class="rounded-circle" style="width: 14px; height: 14px;"></div>
+                <p th:if="${producto.stock>0}" class="ms-2 text-success text-sm font-medium">
+                    Disponible
+                    <span class="text-dark font-normal">
+                        - Este producto está en stock y listo para ser entregado
+                    </span>
+                </p>
+                <p th:if="${producto.stock==0}" class="ms-2 text-warning text-sm font-medium w-100">
+                    Hacer un pedido
+                    <span class="text-dark font-normal">
+                        - Este producto está actualmente agotado, pero puedes hacer un pedido
+                    </span>
+                </p>
+            </div>
+
+            <div class="w-100 border-bottom border-dark mb-3"></div>
+
+            <div class="text-center mb-3">
+                <h2 class="text-sm mb-3">Paga seguro con:</h2>
+                <div class="d-flex justify-content-center gap-3">
+                    <div class="w-25 h-25 d-flex align-items-center justify-content-center border border-secondary rounded">
+                        <img src="/images/detalleProductos/mercadoPago.svg">
+                    </div>
+                    <div class="w-25 h-25 d-flex align-items-center justify-content-center border border-secondary rounded">
+                        <img src="/images/detalleProductos/visa.svg">
+                    </div>
+                    <div class="w-25 h-25 d-flex align-items-center justify-content-center border border-secondary rounded">
+                        <img src="/images/detalleProductos/mastercard.svg">
+                    </div>
+                    <div class="w-25 h-25 d-flex align-items-center justify-content-center border border-secondary rounded">
+                        <img src="/images/detalleProductos/americanExpress.svg">
+                    </div>
+                </div>
+            </div>
+
+            <button id="btn-agregarCarrito" class="w-100 d-flex justify-content-center py-2 mb-3 text-white bg-secondary border border-dark rounded">
+                <svg class="mr-1.5 w-6 h-6"
+                     data-slot="icon"
+                     fill="none"
+                     stroke-width="1.5"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg"
+                     aria-hidden="true"
+                >
+                    <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                    ></path>
+                </svg>
+                <span th:if="${producto.stock > 0}">Agregar al carrito</span>
+                <span th:if="${producto.stock == 0}">Hacer un pedido</span>
+            </button>
+
+            <div class="text-xs font-light">
+                <h2 class="mb-3">El paquete incluye</h2>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <div class="d-flex align-items-center">
+                        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <rect width="34" height="34" fill="url(#pattern0)"/>
+                            <defs>
+                                <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                    <use xlink:href="#image0_397_802" transform="scale(0.01)"/>
+                                </pattern>
+                                <image id="image0_397_802" width="100" height="100" xlink:href="data:image/png;base64,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"/>
+                            </defs>
+                        </svg>
+                        <p class="ms-2">Almohadilla lumbar con espuma<br>inyectada de Memory FOAM</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <rect width="34" height="34" fill="url(#pattern1)"/>
+                            <defs>
+                                <pattern id="pattern1" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                    <use xlink:href="#image0_398_813" transform="scale(0.01)"/>
+                                </pattern>
+                                <image id="image0_398_813" width="100" height="100" xlink:href="data:image/png;base64,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"/>
+                            </defs>
+                        </svg>
+                        <p class="ms-2">Almohadilla cervical con espuma<br>inyectada de Memory FOAM</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <rect width="34" height="34" fill="url(#pattern2)"/>
+                            <defs>
+                                <pattern id="pattern2" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                    <use xlink:href="#image0_398_815" transform="scale(0.01)"/>
+                                </pattern>
+                                <image id="image0_398_815" width="100" height="100" xlink:href="data:image/png;base64,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"/>
+                            </defs>
+                        </svg>
+                        <p class="ms-2">Garantía en caso fallas de<br>fabricación o defectos en el producto</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<div th:insert="~{user/components/carrito.html::modalCarrito}"></div>
+
+<footer th:replace="~{user/components/footer.html::footer}"></footer>
+
+<!-- incluir el modal para abrir el carrito-->
+    <div th:insert="~{user/components/carrito.html::modalCarrito}"></div>
+
+    <script src="/js/carrito.js"></script>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+        const btnAgregarCarrito = document.getElementById('btn-agregarCarrito');
+
+        // Obtener el ID del producto
+        const idProducto = /*[[${producto.productoId}]]*/ '0';
+
+            btnAgregarCarrito?.addEventListener('click', async function() {
+                agregarAlCarrito(idProducto);
+        });
+    });
+    </script>
+
+
+<script src="/js/productos/imagenesProductos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

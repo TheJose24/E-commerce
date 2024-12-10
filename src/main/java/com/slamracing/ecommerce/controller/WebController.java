@@ -9,18 +9,15 @@ import com.slamracing.ecommerce.repository.ProductoRepository;
 import com.slamracing.ecommerce.repository.UsuarioRepository;
 import com.slamracing.ecommerce.security.service.SessionManager;
 import com.slamracing.ecommerce.service.*;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.format.TextStyle;
 import java.util.List;
@@ -45,6 +42,21 @@ public class WebController {
     private final PagoRepository pagoRepository;
 
     String PAGINA_ACTUAL;
+
+    @Setter
+    @Getter
+    private PedidoEntity pedido;
+
+    @GetMapping("/procesoPago")
+    public String procesoPago(Model model) {
+        // Si el pedido no es nulo, agregarlo al modelo
+        if (pedido != null) {
+            log.info("Pedido recibido en procesoPago: {}", pedido);
+            model.addAttribute("pedido", pedido);
+            model.addAttribute("detalle", pedido.getDetalles());
+        }
+        return "user/comprar";
+    }
 
     @GetMapping("/cambiar_idioma")
     public String changeLanguage(@RequestParam("idioma") String lang, HttpSession session) {
@@ -80,7 +92,28 @@ public class WebController {
         PAGINA_ACTUAL = "productos";
         // Mostrar el idioma actual en mayúsculas
         model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+
+        List<ProductoEntity> productos = productoService.listarProductos();
+        model.addAttribute("productos", productos);
         return "user/producto";
+    }
+
+    @GetMapping("/detalle/{slug}")
+    public String informacionProducto(@PathVariable String slug, Model model, Locale locale) {
+        PAGINA_ACTUAL = "productos";
+        // Mostrar el idioma actual en mayúsculas
+        model.addAttribute("idiomaActual", locale.getLanguage().toUpperCase());
+        // Buscar el producto por su slug
+        ProductoEntity productoDb = productoService.buscarProductoPorSlug(slug);
+        log.info("Informacion del producto: {}", productoDb);
+        model.addAttribute("producto", productoDb);
+
+        // Buscar todos los productos con el mismo nombre
+        List<ProductoEntity> productosPorNombre = productoService.listarProductosPorNombre(productoDb.getNombre());
+        log.info("Productos con el mismo nombre: {}", productosPorNombre);
+        model.addAttribute("productosPorNombre", productosPorNombre);
+
+        return "user/informacion_producto";
     }
 
     @GetMapping("/contacto")

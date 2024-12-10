@@ -1,11 +1,10 @@
 package com.slamracing.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.slamracing.ecommerce.model.enums.EstadoPedido;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,6 +16,8 @@ import java.util.Set;
 @Entity
 @Table(name = "pedidos")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@ToString(exclude = "detalles")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -39,6 +40,8 @@ public class PedidoEntity {
     @Enumerated(EnumType.STRING)
     private EstadoPedido estado;
 
+    private BigDecimal subtotal;
+
     @Column(nullable = false)
     private BigDecimal total;
 
@@ -46,6 +49,7 @@ public class PedidoEntity {
     @LastModifiedDate
     private LocalDateTime ultimaActualizacion;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DetallePedidoEntity> detalles;
 }
