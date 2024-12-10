@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @Table(name = "detalles_pedido")
 @Data
 @ToString(exclude = "pedido")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,7 +23,7 @@ public class DetallePedidoEntity {
     private Long detalleId;
 
     @JsonBackReference
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id", nullable = false)
     private PedidoEntity pedido;
 

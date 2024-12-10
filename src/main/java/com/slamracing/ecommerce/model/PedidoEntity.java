@@ -49,7 +49,7 @@ public class PedidoEntity {
     @LastModifiedDate
     private LocalDateTime ultimaActualizacion;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<DetallePedidoEntity> detalles;
 }

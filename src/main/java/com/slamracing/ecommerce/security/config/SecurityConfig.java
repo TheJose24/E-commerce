@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/email/**").permitAll()
                         .requestMatchers("/", "/productos", "/contacto", "/formularioContacto","/sobre_nosotros", "/soporte", "/detalle/**").permitAll()
                         .requestMatchers("/procesoPago").permitAll()
+                        .requestMatchers("/v1/mercadoPago/**").permitAll()
                         .requestMatchers("/admin/**").permitAll()
                         .requestMatchers("/401").permitAll()
                         .anyRequest().authenticated()

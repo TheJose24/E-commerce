@@ -28,4 +28,12 @@ public class PedidoService {
         return pedidoRepository.buscarPorCriterio(query);
     }
 
+    public PedidoEntity buscarPedidoPorId(Long id) {
+        return pedidoRepository.findById(id).orElse(null);
+    }
+
+    public void guardarPedido(PedidoEntity pedido) {
+        pedidoRepository.save(pedido);
+    }
+
 }

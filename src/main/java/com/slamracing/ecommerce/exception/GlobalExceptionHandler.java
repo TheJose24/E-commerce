@@ -52,6 +52,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("Error interno del servidor. Por favor, intente más tarde.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(MercadoPagoException.class)
+    public ResponseEntity<String> handleMercadoPagoException(MercadoPagoException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     private HttpStatus getStatusFromException(RuntimeException ex) {
         if (ex instanceof HttpStatusProvider) {
             return ((HttpStatusProvider) ex).getHttpStatus();

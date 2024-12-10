@@ -18,6 +18,8 @@
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
 
     <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
 
@@ -69,7 +71,7 @@
                          class="flex justify-between text-white w-full items-center px-2 py-1.5 border border-solid border-white rounded-2xl">
                         <div class="flex items-center gap-x-4">
                             <img class="object-contain w-[70px] bg-white rounded-lg"
-                                 th:src="@{/images/{img} (img=${detalle.producto.imagenes.get(0).urlImagen})}" th:alt="${detalle.producto.slug}">
+                                 th:src="@{/productoImages/{img} (img=${detalle.producto.imagenes.get(0).urlImagen})}" th:alt="${detalle.producto.slug}">
                             <div class="flex flex-col">
                                 <h2 th:text="${detalle.producto.nombre} + ' ' + ${detalle.producto.color}" class="text-lg font-medium"></h2>
                                 <h3 th:text="${detalle.producto.material} + ' ™' " class="text-sm"></h3>
@@ -207,6 +209,428 @@
         </div>
     </div>
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
+
+
+
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const pedido = /*[[${pedido}]]*/ null;
+    const detalle = /*[[${detalle}]]*/ null;
+    let requestBody = [];
+    let detalleParams = {};
+
+    detalle.forEach(detalle => {
+        detalleParams = {
+            id: detalle.producto.id,
+            title: detalle.producto.nombre + ' ' + detalle.producto.color,
+            description: detalle.producto.descripcion,
+            picture_url: "https://9195-181-233-24-149.ngrok-free.app/images/"+detalle.producto.imagenes[0].url,
+            category_id: 'home',
+            quantity: detalle.cantidad,
+            currency_id: 'PEN',
+            unit_price: detalle.total,
+        };
+        requestBody.push(detalleParams);
+    });
+
+    const publicKey = /*[[${public_key}]]*/ null;
+    /*]]>*/
+
+</script>
+
+<script>
+
+    function procesarPago(){
+        const total = document.getElementById('total').textContent;
+        console.log(total);
+
+        // Aquí puedes hacer algo con la respuesta del servidor, como mostrar un mensaje al usuario
+        const mp = new MercadoPago(publicKey, {
+            locale: 'es-PE'
+        });
+
+        const bricksBuilder = mp.bricks();
+        const renderWalletBrick = async (bricksBuilder) => {
+            const settings = {
+                initialization: {
+                    redirectMode: 'modal',
+                },
+                customization: {
+                    texts: {
+                        action: 'pay',
+                        valueProp: 'security_safety',
+                    },
+                    visual: {
+                        hideValueProp: true,
+                        buttonBackground: 'default', // default, black, blue, white
+                        valuePropColor: 'grey', // grey, white
+                        buttonHeight: '48px', // min 48px - max free
+                        borderRadius: '6px',
+                        verticalPadding: '16px', // min 16px - max free
+                        horizontalPadding: '0px', // min 0px - max free
+                    },
+                    checkout: {
+                        theme: {
+                            elementsColor: '#4287F5', // color hex code
+                            headerColor: '#4287F5', // color hex code
+                        },
+                    },
+                },
+                callbacks: {
+                    onReady: () => {
+                        /*
+                        Callback called when Brick is ready.
+                        Here you can hide loadings from your site, for example.
+                        */
+                    },
+                    onSubmit: async (request) => {
+
+                        /*
+                        Callback called when clicking Wallet Brick
+                        this is possible because the brick is a button
+                        at this time of submit, you must create the preference
+                        */
+                        request = preferenciaRequest;
+                        request.items = requestBody;
+                        console.log('Dentro del evento OnSubmit', request);
+
+                        try {
+                            // Primera solicitud: Generar el pedido y obtener el external_reference
+                            const pedidoSolicitud = await fetch('/v1/mercadoPago/generarPedido', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(pedido),
+                            });
+
+                            if (!pedidoSolicitud.ok) {
+                                throw new Error('Error al generar el pedido');
+                            }
+
+                            const pedidoResponse = await pedidoSolicitud.text();
+                            console.log('Pedido generado:', pedidoResponse);
+                            request.external_reference = pedidoResponse;
+                            console.log('detalle', detalleParams);
+                            console.log('formData', request);
+
+                            // Segunda solicitud: Crear la preferencia utilizando el formData actualizado
+                            const preferenceResponse = await fetch('/v1/mercadoPago/preferencias/crear', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(request),
+                            });
+
+                            if (!preferenceResponse.ok) {
+                                throw new Error('Error al crear la preferencia');
+                            }
+
+                            const preferenceId = await preferenceResponse.text();
+                            console.log('Preferencia creada:', preferenceId);
+
+                            // Resuelve la promesa con el ID de la preferencia
+                            return preferenceId;
+                        } catch (error) {
+                            // Manejar el error cuando ocurre un problema durante las solicitudes
+                            console.error('Error:', error);
+                            throw error;
+                        }
+                    },
+                },
+            };
+            window.walletBrickController = await bricksBuilder.create(
+                'wallet',
+                'walletBrick_container',
+                settings,
+            );
+        };
+        renderWalletBrick(bricksBuilder);
+
+        let paymentId;
+
+        const renderCardPaymentBrick = async (bricksBuilder) => {
+            const settings = {
+                initialization: {
+                    amount: total,
+                },
+                customization: {
+                    visual: {
+                        hideFormTitle: true,
+                        style: {
+                            theme: 'default', // | 'dark' | 'bootstrap' | 'flat'
+                            customVariables: {
+                                formPadding: '0px',
+                            },
+                        },
+                        texts: {
+                            emailSectionTitle: 'Contacto',
+                            formSubmit: 'Pagar S/. ' + total,
+                        },
+                    },
+                    paymentMethods: {
+                        maxInstallments: 12,
+                    }
+                },
+                callbacks: {
+                    onReady: () => {
+                        // Callback llamado cuando Brick esté listo
+                    },
+                    onSubmit: async (cardFormData) => {
+                        try {
+                            // Generar el pedido
+                            const response = await fetch('/v1/mercadoPago/generarPedido', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(pedido),
+                            });
+                            const pedidoResponse = await response.text();
+                            console.log('Pedido generado:', pedidoResponse);
+                            cardFormData.external_reference = pedidoResponse.toString();
+                            cardFormData.statement_descriptor = "Compra de productos en Slam Racing";
+                            cardFormData.description = "Slam Racing Payment";
+                            cardFormData.aditional_info = {
+                                items: requestBody,
+                            };
+
+                            console.log("Formulario:", cardFormData);
+
+
+                            // Procesar el pago
+                            const paymentResponse = await fetch("/v1/mercadoPago/procesar_pago", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(cardFormData),
+                            });
+                            if (!paymentResponse.ok) {
+                                throw new Error("Error al procesar el pago. Estado HTTP: " + paymentResponse.status);
+                            }
+                            const paymentResult = await paymentResponse.text();
+                            console.log("Formulario:", cardFormData);
+                            console.log("Respuesta del servidor:", paymentResult);
+                            paymentId = paymentResult;
+                            const ModalResultadoPago = document.getElementById("resultado-pago");
+                            ModalResultadoPago.classList.remove("hidden");
+                            await initializeStatusScreenBrick();
+                        } catch (error) {
+                            console.error("Error al procesar el pago:", error);
+                        }
+                    },
+                    onError: (error) => {
+                        // Callback llamado para todos los casos de error de Brick
+                        console.log("Error en el Brick:", error);
+                    },
+                },
+            };
+
+            try {
+                window.paymentBrickController = await bricksBuilder.create(
+                    "cardPayment",
+                    "cardPaymentBrick_container",
+                    settings
+                );
+            } catch (error) {
+                console.error("Error al crear el controlador del Brick:", error);
+            }
+        };
+
+        renderCardPaymentBrick(bricksBuilder);
+
+
+
+
+        const initializeStatusScreenBrick = async () => {
+
+            try{
+                // Aquí puedes hacer algo con la respuesta del servidor, como mostrar un mensaje al usuario
+                const mp = new MercadoPago(publicKey, {
+                    locale: 'es-PE'
+                });
+
+                const bricksBuilder = mp.bricks();
+                const renderStatusScreenBrick  = async (bricksBuilder) => {
+                    const settings = {
+                        initialization: {
+                            paymentId: paymentId,
+                        },
+                        customization: {
+                            visual: {
+                                showExternalReference: true,
+                                hideStatusDetails: false,
+                                hideTransactionDate: false,
+                                style: {
+                                    theme: 'default', // 'default' | 'dark' | 'bootstrap' | 'flat'
+                                }
+                            },
+                            backUrls: {
+                                'error': 'https://9195-181-233-24-149.ngrok-free.app/procesoPago',
+                                'return': 'https://9195-181-233-24-149.ngrok-free.app/productos'
+                            }
+                        },
+                        callbacks: {
+                            onReady: () => {
+                                // Callback called when Brick is ready
+                            },
+                            onError: (error) => {
+                                // Callback called for all Brick error cases
+                            },
+                        },
+                    };
+                    window.statusScreenBrickController  = await bricksBuilder.create(
+                        "statusScreen",
+                        "statusScreenBrick_container",
+                        settings
+                    );
+                };
+                await renderStatusScreenBrick(bricksBuilder);
+            } catch (error) {
+                console.error("Error al inicializar el formulario de pago", error);
+            }
+        };
+    }
+
+
+</script>
+
+<script>
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const steps = Array.from(document.querySelectorAll('.step'));
+
+
+
+    // Obtener los elementos de los indicadores de paso
+    const step1Indicator = document.getElementById('step-1');
+    const step1IndicatorText = document.getElementById('step-1-text');
+
+    const step2Indicator = document.getElementById('step-2');
+    const step2IndicatorText = document.getElementById('step-2-text');
+
+    const step3Indicator = document.getElementById('step-3');
+    const step3IndicatorText = document.getElementById('step-3-text');
+
+
+    let currentStep = 0;
+
+    // Crear un objeto para almacenar los datos del formulario
+    const preferenciaRequest = {};
+
+    function showStep(stepIndex) {
+        steps.forEach((step, index) => {
+            if (index === stepIndex) {
+                step.classList.remove('hidden');
+            } else {
+                step.classList.add('hidden');
+            }
+        });
+
+        prevBtn.disabled = stepIndex === 0;
+
+        if (stepIndex === steps.length - 1) {
+            nextBtn.style.display = 'none';
+            prevBtn.style.display = 'none';
+        } else {
+            nextBtn.textContent = 'Siguiente';
+        }
+
+        console.log("paso actual", currentStep);
+
+        updateStepIndicator(currentStep);
+    }
+
+    function validateStep(stepIndex) {
+        // Aquí puedes agregar lógica de validación de campos si es necesario
+        return true;
+    }
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+            currentStep--;
+            showStep(currentStep);
+            console.log(currentStep);
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        if (validateStep(currentStep)) {
+            currentStep++;
+            if (currentStep < steps.length - 1) {
+                showStep(currentStep);
+                console.log(currentStep);
+            } else if (currentStep === steps.length - 1) {
+                showStep(currentStep);
+                console.log(currentStep)
+                console.log('Formulario enviado');
+                saveFormData();
+                procesarPago();
+                console.log(preferenciaRequest);
+            }
+        }
+    });
+
+    showStep(currentStep);
+
+
+
+
+
+    function updateStepIndicator(currentStep) {
+        // Resetear los estilos de fondo de todos los pasos
+        step1Indicator.classList.remove('bg-lightGray100');
+        step2Indicator.classList.remove('bg-lightGray100');
+        step3Indicator.classList.remove('bg-lightGray100');
+
+        // Establecer el estilo de fondo del paso actual
+        if (currentStep === 0) {
+            step1Indicator.classList.add('bg-black', 'text-white');
+            step1IndicatorText.classList.add('text-black');
+            step2Indicator.classList.add('bg-lightGray100', 'text-grey');
+            step2IndicatorText.classList.add('text-grey');
+            step3Indicator.classList.add('bg-lightGray100', 'text-grey');
+            step3IndicatorText.classList.add('text-grey');
+        } else if (currentStep === 1) {
+            step1Indicator.classList.add('bg-lightGray100', 'text-grey');
+            step1IndicatorText.classList.add('text-grey');
+            step2Indicator.classList.add('bg-black', 'text-white');
+            step2IndicatorText.classList.add('text-black');
+            step3Indicator.classList.add('bg-lightGray100', 'text-grey');
+            step3IndicatorText.classList.add('text-grey');
+        } else if (currentStep === 2) {
+            step1Indicator.classList.add('bg-lightGray100', 'text-grey');
+            step1IndicatorText.classList.add('text-grey');
+            step2Indicator.classList.add('bg-lightGray100', 'text-grey');
+            step2IndicatorText.classList.add('text-grey');
+            step3Indicator.classList.add('bg-black', 'text-white');
+            step3IndicatorText.classList.add('text-black');
+        }
+    }
+
+
+
+    function saveFormData() {
+        // Guardar los datos del paso 1
+        preferenciaRequest.nombre = document.getElementById('nombre').value;
+        preferenciaRequest.apellido = document.getElementById('apellido').value;
+        preferenciaRequest.email = document.getElementById('email').value;
+        preferenciaRequest.telefono = document.getElementById('telefono').value;
+
+        // Guardar los datos del paso 2
+        preferenciaRequest.departamento = document.getElementById('departamento').value;
+        preferenciaRequest.provincia = document.getElementById('provincia').value;
+        preferenciaRequest.distrito = document.getElementById('distrito').value;
+        preferenciaRequest.direccion = document.getElementById('direccion').value;
+        preferenciaRequest.referencia = document.getElementById('referencia').value;
+    }
+
+</script>
 
 </body>
 </html>
